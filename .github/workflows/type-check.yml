@@ -1,4 +1,4 @@
-name: Test
+name: Type check
 
 on: [push]
 
@@ -29,11 +29,8 @@ jobs:
       - name: Install npm dependencies
         run: npm install
 
-      - name: Build modules
-        run: npm run build
-
-      - name: Test individual modules
-        run: npx lerna run test --concurrency 2 --stream
+      - name: Run type check
+        run: npm run type-check
 
       - name: Notify Slack about build failure
         if: failure() && github.ref == 'refs/heads/ui/main'
