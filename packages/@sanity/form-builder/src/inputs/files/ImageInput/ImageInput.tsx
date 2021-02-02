@@ -586,7 +586,7 @@ export default class ImageInput extends React.PureComponent<Props, ImageInputSta
                 compareValue={compareValue?.asset?._ref}
               >
                 <ChangeIndicatorWithProvidedFullPath
-                  path={['asset']}
+                  path={[]}
                   hasFocus={this.hasFileTargetFocus()}
                   value={value?.asset}
                   compareValue={compareValue?.asset}
