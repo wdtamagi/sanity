@@ -82,7 +82,6 @@ type ImageInputState = {
   isUploading: boolean
   isAdvancedEditOpen: boolean
   selectedAssetSource: AssetSource | null
-  hasFileTargetFocus: boolean
   // Metadata about files currently over the drop area
   hoveringFiles: FileInfo[]
 }
@@ -105,7 +104,6 @@ export default class ImageInput extends React.PureComponent<Props, ImageInputSta
     isUploading: false,
     isAdvancedEditOpen: false,
     selectedAssetSource: null,
-    hasFileTargetFocus: false,
     hoveringFiles: [],
   }
 
@@ -321,17 +319,15 @@ export default class ImageInput extends React.PureComponent<Props, ImageInputSta
     this.setState({selectedAssetSource: null})
   }
 
+  hasFileTargetFocus() {
+    return this.props.focusPath?.[0] === 'asset'
+  }
+
   handleFileTargetFocus = () => {
-    this.setState({
-      hasFileTargetFocus: true,
-    })
     this.props.onFocus(['asset'])
   }
   handleFileTargetBlur = () => {
     this.props.onBlur()
-    this.setState({
-      hasFileTargetFocus: false,
-    })
   }
   handleFilesOver = (hoveringFiles: FileInfo[]) => {
     this.setState({
@@ -448,12 +444,10 @@ export default class ImageInput extends React.PureComponent<Props, ImageInputSta
 
   renderUploadPlaceholder() {
     const {readOnly} = this.props
-    const {hasFileTargetFocus} = this.state
-
     return readOnly ? (
       <span>Field is read only</span>
     ) : (
-      <UploadPlaceholder canPaste={hasFileTargetFocus} />
+      <UploadPlaceholder canPaste={this.hasFileTargetFocus()} />
     )
   }
 
@@ -559,7 +553,7 @@ export default class ImageInput extends React.PureComponent<Props, ImageInputSta
       presence,
       directUploads,
     } = this.props
-    const {isAdvancedEditOpen, hoveringFiles, hasFileTargetFocus, selectedAssetSource} = this.state
+    const {isAdvancedEditOpen, hoveringFiles, selectedAssetSource} = this.state
     const [highlightedFields, otherFields] = partition(
       type.fields.filter((field) => !HIDDEN_FIELDS.includes(field.name)),
       'type.options.isHighlighted'
@@ -593,7 +587,7 @@ export default class ImageInput extends React.PureComponent<Props, ImageInputSta
               >
                 <ChangeIndicatorWithProvidedFullPath
                   path={['asset']}
-                  hasFocus={hasFileTargetFocus}
+                  hasFocus={this.hasFileTargetFocus()}
                   value={value?.asset}
                   compareValue={compareValue?.asset}
                 >
