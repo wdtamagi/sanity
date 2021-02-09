@@ -7,13 +7,13 @@ import {
 import {OverflowMenu} from './OverflowMenu'
 import {PTEToolbarAction, PTEToolbarActionGroup} from './types'
 
-interface Props {
+export interface ActionMenuProps {
   disabled: boolean
   groups: PTEToolbarActionGroup[]
   readOnly: boolean
 }
 
-export default function ActionMenu(props: Props) {
+export default function ActionMenu(props: ActionMenuProps) {
   const {disabled, groups, readOnly} = props
   const editor = usePortableTextEditor()
   const selection = usePortableTextEditorSelection()
