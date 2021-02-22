@@ -38,7 +38,7 @@ import PatchEvent, {set, setIfMissing, unset} from '../../../PatchEvent'
 import UploadPlaceholder from '../common/UploadPlaceholder'
 import WithMaterializedReference from '../../../utils/WithMaterializedReference'
 import {FileInputButton} from '../common/FileInputButton/FileInputButton'
-import {FileTarget, Overlay} from '../common/styles'
+import {FileTargetCard, Overlay} from '../common/styles'
 import {UploadState} from '../types'
 import {UploadProgress} from '../common/UploadProgress'
 import {urlToFile, base64ToFile} from './utils/image'
@@ -400,13 +400,13 @@ export default class ImageInput extends React.PureComponent<Props, ImageInputSta
       <Dialog
         header="Edit details"
         position="absolute"
-        width="auto"
+        width={1}
         id={`${this._inputId}_dialog`}
         onClose={this.handleStopAdvancedEdit}
       >
         <PresenceOverlay>
           <Box padding={4}>
-            <Grid gap={2} columns={2}>
+            <Grid gap={5}>
               {withImageTool && (
                 <WithMaterializedReference materialize={materialize} reference={value?.asset}>
                   {(imageAsset) => (
@@ -485,7 +485,7 @@ export default class ImageInput extends React.PureComponent<Props, ImageInputSta
         This field is read-only
       </Text>
     ) : (
-      <UploadPlaceholder canPaste={this.hasFileTargetFocus()} />
+      <UploadPlaceholder canPaste={this.hasFileTargetFocus()} fileType="image" />
     )
   }
 
@@ -616,49 +616,53 @@ export default class ImageInput extends React.PureComponent<Props, ImageInputSta
           __unstable_changeIndicator={false}
         >
           <div>
-            <Box>
-              <ChangeIndicatorCompareValueProvider
+            <ChangeIndicatorCompareValueProvider
+              value={value?.asset?._ref}
+              compareValue={compareValue?.asset?._ref}
+            >
+              <ChangeIndicatorWithProvidedFullPath
+                path={[]}
+                hasFocus={this.hasFileTargetFocus()}
                 value={value?.asset?._ref}
                 compareValue={compareValue?.asset?._ref}
               >
-                <ChangeIndicatorWithProvidedFullPath
-                  path={[]}
-                  hasFocus={this.hasFileTargetFocus()}
-                  value={value?.asset?._ref}
-                  compareValue={compareValue?.asset?._ref}
+                <FileTargetCard
+                  disabled={readOnly === true}
+                  onBlur={this.handleFileTargetBlur}
+                  onFiles={this.handleSelectFiles}
+                  onFilesOver={this.handleFilesOver}
+                  onFilesOut={this.handleFilesOut}
+                  onFocus={this.handleFileTargetFocus}
+                  ref={this.setFocusElement}
+                  shadow={1}
+                  tone="transparent"
                 >
-                  <FileTarget
-                    tabIndex={0}
-                    shadow={1}
-                    disabled={readOnly === true}
-                    ref={this.setFocusElement}
-                    onFiles={this.handleSelectFiles}
-                    onFilesOver={this.handleFilesOver}
-                    onFilesOut={this.handleFilesOut}
-                    onFocus={this.handleFileTargetFocus}
-                    onBlur={this.handleFileTargetBlur}
-                  >
-                    <AssetBackground align="center" justify="center" padding={1}>
+                  <AssetBackground>
+                    <div>
                       {value?._upload && this.renderUploadState(value._upload)}
                       {!value?._upload && value?.asset && this.renderAsset()}
                       {!value?._upload && !value?.asset && this.renderUploadPlaceholder()}
                       {!value?._upload && !readOnly && hoveringFiles.length > 0 && (
                         <Overlay>Drop top upload</Overlay>
                       )}
-                    </AssetBackground>
-                  </FileTarget>
-                </ChangeIndicatorWithProvidedFullPath>
-              </ChangeIndicatorCompareValueProvider>
-            </Box>
+                    </div>
+                  </AssetBackground>
+                </FileTargetCard>
+              </ChangeIndicatorWithProvidedFullPath>
+            </ChangeIndicatorCompareValueProvider>
 
-            <Grid gap={1} columns={[2, 3, 4]} marginTop={3}>
+            <Grid
+              gap={2}
+              marginTop={2}
+              style={{gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))'}}
+            >
               {!readOnly && directUploads && (
                 <FileInputButton
                   icon={UploadIcon}
                   mode="ghost"
                   onSelect={this.handleSelectFiles}
                   accept={accept}
-                  text="Upload"
+                  text="Upload image"
                 />
               )}
               {!readOnly && this.renderSelectImageButton()}
@@ -666,9 +670,8 @@ export default class ImageInput extends React.PureComponent<Props, ImageInputSta
                 <Button
                   icon={readOnly ? EyeOpenIcon : EditIcon}
                   mode="ghost"
-                  title={readOnly ? 'View details' : 'Edit details'}
                   onClick={this.handleStartAdvancedEdit}
-                  text={readOnly ? 'View details' : 'Edit'}
+                  text={readOnly ? 'View details' : 'Edit details'}
                 />
               )}
               {value?.asset && !readOnly && (
@@ -677,7 +680,7 @@ export default class ImageInput extends React.PureComponent<Props, ImageInputSta
                   mode="ghost"
                   icon={TrashIcon}
                   onClick={this.handleRemoveButtonClick}
-                  text="Remove"
+                  text="Remove image"
                 />
               )}
             </Grid>

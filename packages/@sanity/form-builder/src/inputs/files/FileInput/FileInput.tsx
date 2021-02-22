@@ -24,7 +24,7 @@ import PatchEvent, {setIfMissing, unset} from '../../../PatchEvent'
 import {FormBuilderInput} from '../../../FormBuilderInput'
 import UploadPlaceholder from '../common/UploadPlaceholder'
 import {FileInputButton} from '../common/FileInputButton/FileInputButton'
-import {FileTarget, FileInfo, Overlay} from '../common/styles'
+import {FileTargetCard, FileInfo, Overlay} from '../common/styles'
 import {UploadState} from '../types'
 import {UploadProgress} from '../common/UploadProgress'
 import {AssetBackground} from './styles'
@@ -395,15 +395,16 @@ export default class FileInput extends React.PureComponent<Props, FileInputState
                 value={value?.asset?._ref}
                 compareValue={compareValue?.asset?._ref}
               >
-                <FileTarget
-                  tabIndex={0}
+                <FileTargetCard
                   disabled={readOnly === true}
-                  ref={this.setFocusInput}
+                  onBlur={this.handleFileTargetBlur}
                   onFiles={this.handleSelectFiles}
                   onFilesOver={this.handleFilesOver}
                   onFilesOut={this.handleFilesOut}
                   onFocus={this.handleFileTargetFocus}
-                  onBlur={this.handleFileTargetBlur}
+                  ref={this.setFocusInput}
+                  tabIndex={0}
+                  tone="transparent"
                 >
                   <AssetBackground>
                     <Container padding={3} sizing="border" width={0}>
@@ -415,7 +416,7 @@ export default class FileInput extends React.PureComponent<Props, FileInputState
                       )}
                     </Container>
                   </AssetBackground>
-                </FileTarget>
+                </FileTargetCard>
               </ChangeIndicatorWithProvidedFullPath>
             </ChangeIndicatorCompareValueProvider>
 

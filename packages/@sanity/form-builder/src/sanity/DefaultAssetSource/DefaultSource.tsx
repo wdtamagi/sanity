@@ -111,11 +111,11 @@ export class DefaultSource extends React.Component<Props, State> {
       <Dialog
         id={this._elementId}
         header="Select image"
-        width={1}
+        width={2}
         position="absolute"
         onClose={this.handleClose}
       >
-        <Box padding={2}>
+        <Box padding={4}>
           <div className={styles.imageGrid}>
             {assets.map((asset) => (
               <Asset

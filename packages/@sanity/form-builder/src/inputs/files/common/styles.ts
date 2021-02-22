@@ -5,7 +5,7 @@ import {focusRingBorderStyle, focusRingStyle} from './focusringUtils'
 
 export type {FileInfo} from '../../common/fileTarget'
 
-const CardWithFocusRing = styled(Card)(({theme}: {theme: Theme}) => {
+const CardWithFocusRing = styled(Card).attrs({tabIndex: 0})(({theme}: {theme: Theme}) => {
   const border = {width: 1, color: 'var(--card-border-color)'}
 
   return css`
@@ -25,7 +25,7 @@ const CardWithFocusRing = styled(Card)(({theme}: {theme: Theme}) => {
   `
 })
 
-export const FileTarget = fileTarget(CardWithFocusRing)
+export const FileTargetCard = fileTarget(CardWithFocusRing)
 
 export const Overlay: React.ComponentType = styled.div`
   position: absolute;

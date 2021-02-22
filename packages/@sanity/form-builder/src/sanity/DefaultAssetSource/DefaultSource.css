@@ -3,11 +3,11 @@
 .imageGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-  grid-gap: 0.5em;
+  grid-gap: var(--extra-small-padding);
 
   @media (--screen-medium) {
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    grid-gap: 1em;
+    grid-gap: var(--small-padding);
   }
 }
 
