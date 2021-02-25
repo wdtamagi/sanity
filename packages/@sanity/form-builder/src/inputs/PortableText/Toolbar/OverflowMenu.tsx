@@ -1,5 +1,5 @@
-import React, {useEffect, useRef, useState} from 'react'
 import classNames from 'classnames'
+import React, {useEffect, useRef, useState, useMemo} from 'react'
 import {EllipsisHorizontalIcon} from '@sanity/icons'
 import {MenuButton} from '../../../legacyParts'
 
