@@ -237,9 +237,11 @@ export const TagInput = forwardRef(
         padding={1}
         ref={rootRef}
       >
-        <Placeholder hidden={Boolean(inputValue || value.length)} padding={3}>
-          <Text textOverflow="ellipsis">{placeholder}</Text>
-        </Placeholder>
+        {enabled && (
+          <Placeholder hidden={Boolean(inputValue || value.length)} padding={3}>
+            <Text textOverflow="ellipsis">{placeholder}</Text>
+          </Placeholder>
+        )}
 
         <div className="content">
           {value.map((tag, tagIndex) => (
@@ -258,7 +260,7 @@ export const TagInput = forwardRef(
           <div key="tag-input">
             <Input
               {...restProps}
-              disabled={disabled}
+              disabled={!enabled}
               onBlur={handleInputBlur}
               onChange={handleInputChange}
               onFocus={handleInputFocus}
