@@ -1,12 +1,11 @@
 import React, {forwardRef, useCallback, useImperativeHandle, useMemo, useRef} from 'react'
 import {FormField} from '@sanity/base/components'
-
 import {useId} from '@reach/auto-id'
 import {TagInput} from '../components/tagInput'
 import PatchEvent, {set, unset} from '../PatchEvent'
 import {Props} from './types'
 
-export const TagsArrayInput = forwardRef(
+export const TagsArrayInput: any = forwardRef(
   (props: Props<string[]>, ref: React.Ref<{focus: () => void}>) => {
     const {level, markers, onChange, onFocus, presence, readOnly, type, value = []} = props
     const id = useId()
