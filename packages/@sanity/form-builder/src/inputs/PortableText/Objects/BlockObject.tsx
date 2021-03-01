@@ -10,7 +10,7 @@ import {
 } from '@sanity/portable-text-editor'
 import {FOCUS_TERMINATOR} from '@sanity/util/paths'
 
-import {PatchEvent} from '../../../PatchEvent'
+import {PatchEvent} from '../../../../PatchEvent'
 
 import {useScrollIntoViewOnFocusWithin} from '../../../hooks/useScrollIntoViewOnFocusWithin'
 import {hasFocusWithinPath} from '../../../utils/focusUtils'

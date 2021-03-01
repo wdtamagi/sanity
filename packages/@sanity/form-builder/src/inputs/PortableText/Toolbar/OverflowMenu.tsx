@@ -1,9 +1,7 @@
-/* eslint-disable no-undef */
-
+import React, {useEffect, useRef, useState} from 'react'
 import classNames from 'classnames'
-import EllipsisIcon from 'part:@sanity/base/ellipsis-icon'
-import {MenuButton} from 'part:@sanity/components/menu-button'
-import React, {useEffect, useRef, useState, useMemo} from 'react'
+import {EllipsisHorizontalIcon} from '@sanity/icons'
+import {MenuButton} from '../../../legacyParts'
 
 import styles from './OverflowMenu.css'
 
@@ -118,7 +116,7 @@ export function OverflowMenu(props: Props) {
             'aria-haspopup': 'menu',
             'aria-expanded': open,
             'aria-controls': 'insertmenu',
-            icon: EllipsisIcon,
+            icon: EllipsisHorizontalIcon,
             kind: 'simple',
             padding: 'small',
             selected: open,

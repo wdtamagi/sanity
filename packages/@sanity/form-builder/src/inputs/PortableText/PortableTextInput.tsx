@@ -1,12 +1,10 @@
 import {uniqueId} from 'lodash'
-import FormField from 'part:@sanity/components/formfields/default'
-import Snackbar from 'part:@sanity/components/snackbar/default'
 import React, {useEffect, useState, useMemo} from 'react'
 import {Marker, Path} from '@sanity/types'
+import {FormField} from '@sanity/base/components'
 import {FormFieldPresence} from '@sanity/base/presence'
 import {
   EditorChange,
-  ErrorChange,
   OnCopyFn,
   OnPasteFn,
   Patch as EditorPatch,
@@ -14,12 +12,13 @@ import {
   PortableTextEditor,
   Type,
   HotkeyOptions,
+  InvalidValue,
 } from '@sanity/portable-text-editor'
 import {Subject} from 'rxjs'
-import {Box} from '@sanity/ui'
+import {Box, useToast} from '@sanity/ui'
 import PatchEvent from '../../PatchEvent'
 import withPatchSubscriber from '../../utils/withPatchSubscriber'
-import {Patch} from '../../patch/types'
+import type {Patch} from '../../patch/types'
 import {RenderBlockActions, RenderCustomMarkers} from './types'
 import Input from './Input'
 import {InvalidValue as RespondToInvalidContent} from './InvalidValue'
@@ -78,6 +77,8 @@ const PortableTextInputWithRef = React.forwardRef(function PortableTextInput(
     value,
   } = props
 
+  const toast = useToast()
+
   // The PortableTextEditor will not re-render unless the value is changed (which is good).
   // But, we want to re-render it when the markers changes too,
   // (we render error indicators directly in the editor nodes for inline objects and annotations)
@@ -93,12 +94,8 @@ const PortableTextInputWithRef = React.forwardRef(function PortableTextInput(
   const [valueTouchedByMarkers, setValueTouchedByMarkers] = useState(props.value)
   useEffect(forceUpdate, [validationHash, value])
 
-  const [editorErrorNotification, setEditorErrorNotification]: [ErrorChange, any] = useState(
-    undefined
-  )
-
   // Reset invalidValue if new value is coming in from props
-  const [invalidValue, setInvalidValue] = useState(null)
+  const [invalidValue, setInvalidValue] = useState<InvalidValue | null>(null)
   useEffect(() => {
     if (invalidValue && value !== invalidValue.value) {
       setInvalidValue(null)
@@ -155,7 +152,10 @@ const PortableTextInputWithRef = React.forwardRef(function PortableTextInput(
         setInvalidValue(change)
         break
       case 'error':
-        setEditorErrorNotification(change)
+        toast.push({
+          status: change.level,
+          description: change.description,
+        })
         break
       default:
     }
@@ -239,15 +239,6 @@ const PortableTextInputWithRef = React.forwardRef(function PortableTextInput(
   )
   return (
     <>
-      {editorErrorNotification && (
-        // Display intended editor errors to the user
-        <Snackbar
-          kind={editorErrorNotification.level}
-          isPersisted
-          onAction={() => setEditorErrorNotification(undefined)}
-          subtitle={<div>{editorErrorNotification.description}</div>}
-        />
-      )}
       {invalidValue && !ignoreValidationError && respondToInvalidContent}
       {(!invalidValue || ignoreValidationError) && editorInput}
     </>
@@ -274,11 +265,11 @@ export default withPatchSubscriber(
       return (
         <FormField
           description={type.description}
-          label={type.title}
+          title={type.title}
           level={level}
-          markers={markers}
-          presence={presence}
-          changeIndicator={false}
+          __unstable_markers={markers}
+          __unstable_presence={presence}
+          __unstable_changeIndicator={false}
         >
           <PortableTextInputWithRef {...this.props} ref={this.editorRef} />
         </FormField>

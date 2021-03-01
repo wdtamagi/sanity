@@ -1,8 +1,7 @@
-import {ButtonProps} from '@sanity/base/__legacy/@sanity/components'
-import PlusIcon from 'part:@sanity/base/plus-icon'
-import Button from 'part:@sanity/components/buttons/default'
-import {MenuButton} from 'part:@sanity/components/menu-button'
 import React, {useCallback} from 'react'
+import {Button} from '@sanity/ui'
+import {AddIcon} from '@sanity/icons'
+import {MenuButton} from '../../../legacyParts'
 import {BlockItem} from './types'
 
 import styles from './InsertMenu.css'
@@ -38,9 +37,9 @@ export default function InsertMenu(props: InsertMenuProps) {
           'aria-expanded': open,
           'aria-controls': 'insertmenu',
           disabled: disabled || readOnly,
-          icon: PlusIcon,
-          kind: 'simple',
-          padding: 'small',
+          icon: AddIcon,
+          mode: 'bleed',
+          padding: 2,
           selected: open,
           title: 'Insert elements',
         }}
@@ -57,11 +56,10 @@ export default function InsertMenu(props: InsertMenuProps) {
 function InsertMenuItem({
   item,
   onClick,
-  ...restProps
-}: {item: BlockItem} & Omit<
-  ButtonProps,
-  'aria-label' | 'children' | 'className' | 'disabled' | 'icon' | 'title' | 'type'
->) {
+}: {
+  item: BlockItem
+  onClick: (event: React.MouseEvent<HTMLButtonElement>) => void
+}) {
   const handleClick = useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
       item.handle()
@@ -74,17 +72,14 @@ function InsertMenuItem({
 
   return (
     <Button
-      {...restProps}
       aria-label={`Insert ${title}${item.inline ? ' (inline)' : ' (block)'}`}
-      bleed
+      mode="bleed"
       className={styles.menuItem}
       disabled={item.disabled}
       icon={item.icon}
-      kind="simple"
       onClick={handleClick}
       title={`Insert ${title}${item.inline ? ' (inline)' : ' (block)'}`}
-    >
-      {title}
-    </Button>
+      text={title}
+    />
   )
 }
