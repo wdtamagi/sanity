@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useMemo} from 'react'
 import {
   MdRateReview as icon,
   MdPhotoLibrary as imageIcon,
@@ -7,10 +7,14 @@ import {
 import {BlockEditor} from 'part:@sanity/form-builder'
 
 const CustomEditor = React.forwardRef((props, ref) => {
-  const {markers, value} = props
-  const newMarkers = markers.concat([
-    {type: 'customMarkerTest', path: value && value[0] ? [{_key: value[0]._key}] : []},
-  ])
+  const {markers: markersProp, value} = props
+  const newMarkers = useMemo(
+    () =>
+      markersProp.concat([
+        {type: 'customMarkerTest', path: value && value[0] ? [{_key: value[0]._key}] : []},
+      ]),
+    [markersProp, value]
+  )
   return <BlockEditor {...props} markers={newMarkers} ref={ref} />
 })
 CustomEditor.displayName = 'CustomEditor'

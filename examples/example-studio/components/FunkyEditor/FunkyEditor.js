@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import React from 'react'
+import React, {useMemo} from 'react'
 import {BlockEditor} from 'part:@sanity/form-builder'
 import blockTools from '@sanity/block-tools'
 import CustomMarkers from './CustomMarkers'
@@ -68,35 +68,29 @@ function handlePaste(input) {
   return undefined
 }
 
-export default class FunkyEditor extends React.Component {
-  static propTypes = {
-    type: PropTypes.shape({
-      title: PropTypes.string,
-    }).isRequired,
-    level: PropTypes.number,
-    value: PropTypes.array,
-    markers: PropTypes.array,
-    onChange: PropTypes.func.isRequired,
-  }
+export default function FunkyEditor(props) {
+  const {markers: markersProp, value} = props
+  const markers = useMemo(
+    () =>
+      markersProp.concat([
+        {type: 'customMarkerTest', path: value && value[0] ? [{_key: value[0]._key}] : []},
+      ]),
+    [markersProp, value]
+  )
 
-  render() {
-    const {markers, value} = this.props
-    return (
-      <div>
-        <BlockEditor
-          {...this.props}
-          onPaste={handlePaste}
-          renderBlockActions={BlockActions}
-          renderCustomMarkers={CustomMarkers}
-          markers={markers.concat([
-            {type: 'customMarkerTest', path: value && value[0] ? [{_key: value[0]._key}] : []},
-          ])}
-        />
-        <p>
-          Your funkyness is <strong>{extractTextFromBlocks(this.props.value).length}</strong>{' '}
-          characters long
-        </p>
-      </div>
-    )
-  }
+  return (
+    <div>
+      <BlockEditor
+        {...props}
+        onPaste={handlePaste}
+        renderBlockActions={BlockActions}
+        renderCustomMarkers={CustomMarkers}
+        markers={markers}
+      />
+      <p>
+        Your funkyness is <strong>{extractTextFromBlocks(props.value).length}</strong> characters
+        long
+      </p>
+    </div>
+  )
 }
