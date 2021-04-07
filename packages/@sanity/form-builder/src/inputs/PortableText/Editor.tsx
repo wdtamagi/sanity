@@ -15,7 +15,7 @@ import {
 } from '@sanity/portable-text-editor'
 import {Marker} from '@sanity/types'
 import {useLayer} from '@sanity/ui'
-import {FOCUS_TERMINATOR} from '@sanity/util/paths'
+// import {FOCUS_TERMINATOR} from '@sanity/util/paths'
 import {ScrollContainer} from '@sanity/base/components'
 import React, {useMemo, useCallback, useEffect, useState} from 'react'
 import PatchEvent from '../../../PatchEvent'
@@ -78,44 +78,47 @@ function PortableTextSanityEditor(props: Props) {
   const ptFeatures = useMemo(() => PortableTextEditor.getPortableTextFeatures(editor), [])
   const {isTopLayer} = useLayer()
 
-  // eslint-disable-next-line no-unused-vars
-  const handleOpenObjectHotkey = (
-    event: React.BaseSyntheticEvent,
-    ptEditor: PortableTextEditor
-  ) => {
-    const selection = PortableTextEditor.getSelection(ptEditor)
-    if (selection) {
-      event.preventDefault()
-      event.stopPropagation()
-      const {focus} = selection
-      const activeAnnotations = PortableTextEditor.activeAnnotations(ptEditor)
-      const focusBlock = PortableTextEditor.focusBlock(ptEditor)
-      const focusChild = PortableTextEditor.focusChild(ptEditor)
-      if (activeAnnotations.length > 0) {
-        onFocus([
-          ...focus.path.slice(0, 1),
-          'markDefs',
-          {_key: activeAnnotations[0]._key},
-          FOCUS_TERMINATOR,
-        ])
-        return
-      }
-      if (focusChild && PortableTextEditor.isVoid(ptEditor, focusChild)) {
-        onFocus([...focus.path, FOCUS_TERMINATOR])
-        return
-      }
-      if (focusBlock && PortableTextEditor.isVoid(ptEditor, focusBlock)) {
-        onFocus([...focus.path.slice(0, 1), FOCUS_TERMINATOR])
-      }
-    }
-  }
-  const customFromProps: HotkeyOptions = {
-    custom: {
-      'mod+enter': props.onToggleFullscreen,
-      // 'mod+o': handleOpenObjectHotkey, // TODO: disabled for now, enable when we agree on the hotkey
-      ...(props.hotkeys || {}).custom,
-    },
-  }
+  // const handleOpenObjectHotkey = (
+  //   event: React.BaseSyntheticEvent,
+  //   ptEditor: PortableTextEditor
+  // ) => {
+  //   const selection = PortableTextEditor.getSelection(ptEditor)
+  //   if (selection) {
+  //     event.preventDefault()
+  //     event.stopPropagation()
+  //     const {focus} = selection
+  //     const activeAnnotations = PortableTextEditor.activeAnnotations(ptEditor)
+  //     const focusBlock = PortableTextEditor.focusBlock(ptEditor)
+  //     const focusChild = PortableTextEditor.focusChild(ptEditor)
+  //     if (activeAnnotations.length > 0) {
+  //       onFocus([
+  //         ...focus.path.slice(0, 1),
+  //         'markDefs',
+  //         {_key: activeAnnotations[0]._key},
+  //         FOCUS_TERMINATOR,
+  //       ])
+  //       return
+  //     }
+  //     if (focusChild && PortableTextEditor.isVoid(ptEditor, focusChild)) {
+  //       onFocus([...focus.path, FOCUS_TERMINATOR])
+  //       return
+  //     }
+  //     if (focusBlock && PortableTextEditor.isVoid(ptEditor, focusBlock)) {
+  //       onFocus([...focus.path.slice(0, 1), FOCUS_TERMINATOR])
+  //     }
+  //   }
+  // }
+
+  const customFromProps: HotkeyOptions = useMemo(
+    () => ({
+      custom: {
+        'mod+enter': props.onToggleFullscreen,
+        // 'mod+o': handleOpenObjectHotkey, // TODO: disabled for now, enable when we agree on the hotkey
+        ...(props.hotkeys || {}).custom,
+      },
+    }),
+    [props.hotkeys, props.onToggleFullscreen]
+  )
   const defaultHotkeys = {marks: {}}
   ptFeatures.decorators.forEach((dec) => {
     switch (dec.value) {
