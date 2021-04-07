@@ -138,16 +138,22 @@ function PortableTextSanityEditor(props: Props) {
       // Nothing
     }
   })
-  const marksFromProps: HotkeyOptions = {
-    marks: {
-      ...defaultHotkeys.marks,
-      ...(props.hotkeys || {}).marks,
-    },
-  }
-  const hotkeys: HotkeyOptions = {
-    ...marksFromProps,
-    ...customFromProps,
-  }
+  const marksFromProps: HotkeyOptions = useMemo(
+    () => ({
+      marks: {
+        ...defaultHotkeys.marks,
+        ...(props.hotkeys || {}).marks,
+      },
+    }),
+    [props.hotkeys, defaultHotkeys]
+  )
+  const hotkeys: HotkeyOptions = useMemo(
+    () => ({
+      ...marksFromProps,
+      ...customFromProps,
+    }),
+    [marksFromProps, customFromProps]
+  )
 
   const hasMarkers = markers.length > 0
   const scClassNames = [
