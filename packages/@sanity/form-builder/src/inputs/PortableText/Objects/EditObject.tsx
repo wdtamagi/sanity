@@ -1,5 +1,5 @@
 /* eslint-disable react/no-find-dom-node */
-import React, {useState, useEffect, useMemo, useLayoutEffect} from 'react'
+import React, {useState, useEffect, useMemo, useLayoutEffect, useCallback} from 'react'
 import {isKeySegment, Path, Marker} from '@sanity/types'
 import {FormFieldPresence} from '@sanity/base/presence'
 import {
@@ -53,7 +53,7 @@ export const EditObject = ({
   value,
 }: Props) => {
   const editor = usePortableTextEditor()
-  const ptFeatures = PortableTextEditor.getPortableTextFeatures(editor)
+  const ptFeatures = useMemo(() => PortableTextEditor.getPortableTextFeatures(editor), [editor])
   const [_object, type] = useMemo(() => findObjectAndType(objectEditData, value, ptFeatures), [
     objectEditData,
     ptFeatures,
@@ -61,6 +61,9 @@ export const EditObject = ({
   ])
   const [object, setObject] = useState(_object)
   const [timeoutInstance, setTimeoutInstance] = useState(undefined)
+  const formBuilderPath = objectEditData && objectEditData.formBuilderPath
+  const kind = objectEditData && objectEditData.kind
+  const editModalLayout: ModalType = get(type, 'options.editModal')
 
   // Initialize weakmaps on mount, and send patches on unmount
   useEffect(() => {
@@ -71,38 +74,25 @@ export const EditObject = ({
       PATCHES.delete(editor)
       IS_THROTTLING.delete(editor)
     }
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   useLayoutEffect(() => {
     setObject(_object)
   }, [_object])
 
-  if (!objectEditData) {
-    return null
-  }
-  const {formBuilderPath, kind} = objectEditData
-
-  function handleClose(): void {
+  const handleClose = useCallback((): void => {
     onClose()
-  }
+  }, [onClose])
 
-  const editModalLayout: ModalType = get(type, 'options.editModal')
+  const cancelThrottle = useMemo(
+    () =>
+      debounce(() => {
+        IS_THROTTLING.set(editor, false)
+      }, THROTTLE_MS),
+    [editor]
+  )
 
-  const cancelThrottle = debounce(() => {
-    IS_THROTTLING.set(editor, false)
-  }, THROTTLE_MS)
-
-  function handleChange(patchEvent: PatchEvent): void {
-    setObject(applyAll(object, patchEvent.patches))
-    const patches = PATCHES.get(editor)
-    IS_THROTTLING.set(editor, true)
-    if (patches) {
-      PATCHES.set(editor, PATCHES.get(editor).concat(patchEvent.patches))
-      sendPatches()
-    }
-  }
-
-  function sendPatches() {
+  const sendPatches = useCallback(() => {
     if (IS_THROTTLING.get(editor) === true) {
       cancelThrottle()
       clearInterval(timeoutInstance)
@@ -120,9 +110,22 @@ export const EditObject = ({
       onChange(PatchEvent.from(_patches), formBuilderPath)
     })
     cancelThrottle()
-  }
+  }, [cancelThrottle, editor, formBuilderPath, onChange, timeoutInstance])
 
-  if (!object || !type) {
+  const handleChange = useCallback(
+    (patchEvent: PatchEvent): void => {
+      setObject(applyAll(object, patchEvent.patches))
+      const patches = PATCHES.get(editor)
+      IS_THROTTLING.set(editor, true)
+      if (patches) {
+        PATCHES.set(editor, PATCHES.get(editor).concat(patchEvent.patches))
+        sendPatches()
+      }
+    },
+    [editor, object, sendPatches]
+  )
+
+  if (!objectEditData || !object || !type) {
     return null
   }
 

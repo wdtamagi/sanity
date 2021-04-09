@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import React, {useCallback, useMemo} from 'react'
 import {Button} from '@sanity/ui'
 import {AddIcon} from '@sanity/icons'
 import {MenuButton} from '../../../legacyParts'
@@ -20,12 +20,15 @@ export default function InsertMenu(props: InsertMenuProps) {
     setOpen(false)
   }, [])
 
-  const menu = (
-    <div className={styles.menu}>
-      {items.map((item) => (
-        <InsertMenuItem item={item} onClick={handleClose} key={item.key} />
-      ))}
-    </div>
+  const menu = useMemo(
+    () => (
+      <div className={styles.menu}>
+        {items.map((item) => (
+          <InsertMenuItem item={item} onClick={handleClose} key={item.key} />
+        ))}
+      </div>
+    ),
+    [handleClose, items]
   )
 
   return (

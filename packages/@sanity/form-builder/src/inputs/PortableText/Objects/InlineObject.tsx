@@ -45,7 +45,7 @@ export const InlineObject: FunctionComponent<Props> = ({
     }
   }, [focused, onFocus, path])
 
-  const isEmpty = !value || isEqual(Object.keys(value), ['_key', '_type'])
+  const isEmpty = useMemo(() => !value || isEqual(Object.keys(value), ['_key', '_type']), [value])
   const inline = useMemo(
     () => (
       <span className={classnames} onClick={handleOpen}>

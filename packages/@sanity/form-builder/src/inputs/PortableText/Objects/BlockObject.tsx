@@ -43,13 +43,17 @@ export const BlockObject: FunctionComponent<Props> = ({
 
   useScrollIntoViewOnFocusWithin(elementRef, hasFocusWithinPath(focusPath, value))
 
-  const errors = markers.filter(isValidationErrorMarker)
-  const classnames = classNames([
-    styles.root,
-    focused && styles.focused,
-    selected && styles.selected,
-    errors.length > 0 && styles.hasErrors,
-  ])
+  const errors = useMemo(() => markers.filter(isValidationErrorMarker), [markers])
+  const classnames = useMemo(
+    () =>
+      classNames([
+        styles.root,
+        focused && styles.focused,
+        selected && styles.selected,
+        errors.length > 0 && styles.hasErrors,
+      ]),
+    [errors.length, focused, selected]
+  )
 
   const handleClickToOpen = useCallback(
     (event: SyntheticEvent<HTMLElement>): void => {
