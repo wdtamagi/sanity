@@ -1,3 +1,4 @@
+import {resolveInitialValueForType} from '@sanity/initial-value-templates'
 import {
   HotkeyOptions,
   RenderBlockFunction,
@@ -6,11 +7,10 @@ import {
   Type,
   PortableTextEditor,
 } from '@sanity/portable-text-editor'
-import React, {useMemo, useCallback} from 'react'
 import {Path, SchemaType} from '@sanity/types'
-import {FOCUS_TERMINATOR} from '@sanity/util/paths'
 import {Box, Card, Flex, Stack, useToast} from '@sanity/ui'
-import {resolveInitialValueForType} from '@sanity/initial-value-templates'
+import {FOCUS_TERMINATOR} from '@sanity/util/paths'
+import React, {useCallback, useMemo} from 'react'
 import ActionMenu from './ActionMenu'
 import InsertMenu from './InsertMenu'
 import {getBlockStyleSelectProps, getInsertMenuItems, getPTEToolbarActionGroups} from './helpers'
@@ -33,7 +33,6 @@ function PTEToolbar(props: Props) {
   const editor = usePortableTextEditor()
   const selection = usePortableTextEditorSelection()
   const disabled = !selection
-
   const toast = useToast()
 
   const resolveInitialValue = useCallback(
@@ -112,10 +111,14 @@ function PTEToolbar(props: Props) {
       editor ? getPTEToolbarActionGroups(editor, selection, handleInsertAnnotation, hotkeys) : [],
     [editor, selection, handleInsertAnnotation, hotkeys]
   )
-  const actionsLen = actionGroups.reduce((acc, x) => acc + x.actions.length, 0)
-  const blockStyleSelectProps = editor ? getBlockStyleSelectProps(editor) : null
-
-  const insertMenuItems = React.useMemo(
+  const actionsLen = useMemo(() => actionGroups.reduce((acc, x) => acc + x.actions.length, 0), [
+    actionGroups,
+  ])
+  const blockStyleSelectProps = useMemo(
+    () => (editor && selection ? getBlockStyleSelectProps(editor) : null),
+    [editor, selection]
+  )
+  const insertMenuItems = useMemo(
     () =>
       editor ? getInsertMenuItems(editor, selection, handleInsertBlock, handleInsertInline) : [],
     [editor, handleInsertBlock, handleInsertInline, selection]
