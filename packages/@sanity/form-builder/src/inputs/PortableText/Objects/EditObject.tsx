@@ -213,19 +213,16 @@ function findObjectAndType(
         break
       case 'inlineObject':
         object = child
-        // eslint-disable-next-line max-depth
         if (object) {
           type = ptFeatures.types.inlineObjects.find((t) => t.name === child._type)
         }
         break
       case 'annotation':
-        // eslint-disable-next-line max-depth
         if (child) {
           const markDef =
             child.marks &&
             block.markDefs &&
             block.markDefs.find((def) => child.marks.includes(def._key))
-          // eslint-disable-next-line max-depth
           if (markDef) {
             type = ptFeatures.types.annotations.find((t) => t.name === markDef._type)
             object = markDef

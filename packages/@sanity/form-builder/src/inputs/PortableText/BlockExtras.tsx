@@ -5,30 +5,59 @@ import {isKeySegment, Marker, Path} from '@sanity/types'
 import {
   PortableTextBlock,
   PortableTextEditor,
+  PortableTextFeatures,
   usePortableTextEditor,
 } from '@sanity/portable-text-editor'
 import {Markers} from '../../legacyParts'
-import {RenderCustomMarkers} from './types'
+import PatchEvent from '../../PatchEvent'
+import {RenderBlockActions, RenderCustomMarkers} from './types'
 import styles from './BlockExtras.css'
+import createBlockActionPatchFn from './utils/createBlockActionPatchFn'
 
 type Props = {
   block: PortableTextBlock
-  blockActions?: Node
-  height: number
-  isFullscreen: boolean
+  showChangeIndicator: boolean
   markers: Marker[]
+  onChange: (event: PatchEvent) => void
   onFocus: (path: Path) => void
+  portableTextFeatures: PortableTextFeatures
   renderCustomMarkers?: RenderCustomMarkers
+  renderBlockActions?: RenderBlockActions
+  value: PortableTextBlock[] | undefined
 }
 export default function BlockExtras(props: Props) {
   const editor = usePortableTextEditor()
-  const {block, blockActions, height, isFullscreen, markers, onFocus, renderCustomMarkers} = props
+  const {
+    block,
+    renderBlockActions,
+    showChangeIndicator,
+    markers,
+    onChange,
+    onFocus,
+    portableTextFeatures,
+    renderCustomMarkers,
+    value,
+  } = props
   const blockValidation = getValidationMarkers(markers)
   const errors = blockValidation.filter((mrkr) => mrkr.level === 'error')
   const warnings = blockValidation.filter((mrkr) => mrkr.level === 'warning')
-  const empty = markers.length === 0 && !blockActions
+  const empty = markers.length === 0 && !renderBlockActions
+  let blockActions = null
+  if (renderBlockActions) {
+    const allowedDecorators = portableTextFeatures.decorators.map((item) => item.value)
+    const RenderComponent = renderBlockActions
+    blockActions = (
+      <RenderComponent
+        block={block}
+        value={value}
+        set={createBlockActionPatchFn('set', block, onChange, allowedDecorators)}
+        unset={createBlockActionPatchFn('unset', block, onChange, allowedDecorators) as () => void}
+        insert={createBlockActionPatchFn('insert', block, onChange, allowedDecorators)}
+      />
+    )
+  }
   const content = (
-    <div className={styles.content} style={{height: `${height}px`}}>
+    <div className={styles.content}>
       {markers.length > 0 && (
         <div className={styles.markers}>
           <Markers
@@ -47,26 +76,26 @@ export default function BlockExtras(props: Props) {
   )
   const path = PortableTextEditor.getSelection(editor)?.focus.path
   const hasFocus = path && isKeySegment(path[0]) ? path[0]._key === block._key : false
-  const returned =
-    isFullscreen && path && isKeySegment(path[0]) ? (
-      <ChangeIndicatorWithProvidedFullPath
-        className={styles.changeIndicator}
-        compareDeep
-        value={block}
-        hasFocus={hasFocus}
-        path={[{_key: block._key}]}
-      >
-        {content}
-      </ChangeIndicatorWithProvidedFullPath>
-    ) : (
-      content
-    )
+  const returned = showChangeIndicator ? (
+    <ChangeIndicatorWithProvidedFullPath
+      className={styles.changeIndicator}
+      compareDeep
+      value={block}
+      hasFocus={hasFocus}
+      path={[{_key: block._key}]}
+    >
+      {content}
+    </ChangeIndicatorWithProvidedFullPath>
+  ) : (
+    content
+  )
   return (
     <div
+      contentEditable={false}
       className={classNames([
         styles.root,
         hasFocus && styles.hasFocus,
-        isFullscreen && styles.hasFullScreen,
+        showChangeIndicator && styles.hasChangeIndicator,
         errors.length > 0 && styles.withError,
         warnings.length > 0 && !errors.length && styles.withWarning,
       ])}

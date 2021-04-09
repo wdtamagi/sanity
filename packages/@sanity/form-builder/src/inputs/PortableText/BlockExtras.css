@@ -3,9 +3,10 @@
 .root {
   width: 100%;
   box-sizing: border-box;
-  position: relative;
+  position: absolute;
   overflow: hidden;
   z-index: var(--zindex-portal);
+  pointer-events: none;
 }
 
 .content {
@@ -29,11 +30,11 @@
   }
 }
 
-.hasFullScreen {
+.hasChangeIndicator {
   overflow: visible;
 }
 
-.hasFullScreen .content {
+.hasChangeIndicator .content {
   margin-left: 100%;
 }
 
