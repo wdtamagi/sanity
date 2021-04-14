@@ -29,7 +29,7 @@ export type PatchWithOrigin = Patch & {
   timestamp: Date
 }
 
-type PatchSubscribe = (subscribeFn: PatchSubscriber) => void
+type PatchSubscribe = (subscribeFn: PatchSubscriber) => () => void
 type PatchSubscriber = ({
   patches,
 }: {
@@ -75,6 +75,7 @@ const PortableTextInputWithRef = React.forwardRef(function PortableTextInput(
     renderCustomMarkers,
     type,
     value,
+    subscribe,
   } = props
 
   const toast = useToast()
@@ -87,31 +88,26 @@ const PortableTextInputWithRef = React.forwardRef(function PortableTextInput(
     }
   }, [invalidValue, value])
 
-  // Subscribe to incoming patches
-  let unsubscribe
-  useEffect(() => {
-    unsubscribe = props.subscribe(handleDocumentPatches)
-    return () => {
-      unsubscribe()
-    }
-  }, [])
-
   // Memoized patch stream
   const patche$: Subject<EditorPatch> = useMemo(() => new Subject(), [])
 
   // Handle incoming patches from withPatchSubscriber HOC
-  function handleDocumentPatches({
-    patches,
-  }: {
-    patches: PatchWithOrigin[]
-    snapshot: PortableTextBlock[] | undefined
-  }): void {
-    const patchSelection =
-      patches && patches.length > 0 && patches.filter((patch) => patch.origin !== 'local')
-    if (patchSelection) {
-      patchSelection.map((patch) => patche$.next(patch))
-    }
-  }
+  const handleDocumentPatches = useCallback(
+    ({patches}: {patches: PatchWithOrigin[]; snapshot: PortableTextBlock[] | undefined}): void => {
+      const patchSelection =
+        patches && patches.length > 0 && patches.filter((patch) => patch.origin !== 'local')
+      if (patchSelection) {
+        patchSelection.map((patch) => patche$.next(patch))
+      }
+    },
+    [patche$]
+  )
+
+  // Subscribe to incoming patches
+  useEffect(() => {
+    const unsubscribe = subscribe(handleDocumentPatches)
+    return () => unsubscribe()
+  }, [handleDocumentPatches, subscribe])
 
   // Handle editor changes
   const [hasFocus, setHasFocus] = useState(false)
@@ -150,9 +146,10 @@ const PortableTextInputWithRef = React.forwardRef(function PortableTextInput(
   )
 
   const [ignoreValidationError, setIgnoreValidationError] = useState(false)
-  function handleIgnoreValidation(): void {
+
+  const handleIgnoreValidation = useCallback((): void => {
     setIgnoreValidationError(true)
-  }
+  }, [])
 
   const handleFocusSkipper = useCallback(() => {
     if (ref.current) {
