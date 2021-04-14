@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useMemo} from 'react'
 import classNames from 'classnames'
 import {ChangeIndicatorWithProvidedFullPath} from '@sanity/base/lib/change-indicators'
 import {isKeySegment, Marker, Path} from '@sanity/types'
@@ -38,56 +38,80 @@ export default function BlockExtras(props: Props) {
     renderCustomMarkers,
     value,
   } = props
-  const blockValidation = getValidationMarkers(markers)
-  const errors = blockValidation.filter((mrkr) => mrkr.level === 'error')
-  const warnings = blockValidation.filter((mrkr) => mrkr.level === 'warning')
-  const empty = markers.length === 0 && !renderBlockActions
-  let blockActions = null
-  if (renderBlockActions) {
-    const allowedDecorators = portableTextFeatures.decorators.map((item) => item.value)
-    const RenderComponent = renderBlockActions
-    blockActions = (
-      <RenderComponent
-        block={block}
-        value={value}
-        set={createBlockActionPatchFn('set', block, onChange, allowedDecorators)}
-        unset={createBlockActionPatchFn('unset', block, onChange, allowedDecorators) as () => void}
-        insert={createBlockActionPatchFn('insert', block, onChange, allowedDecorators)}
-      />
-    )
-  }
-  const content = (
-    <div className={styles.content}>
-      {markers.length > 0 && (
-        <div className={styles.markers}>
-          <Markers
-            className={styles.markers}
-            markers={markers}
-            scopedValidation={blockValidation}
-            onFocus={onFocus}
-            renderCustomMarkers={renderCustomMarkers}
-          />
-        </div>
-      )}
-      {blockActions && <div className={styles.blockActions}>{blockActions}</div>}
-      {/* Make sure it gets proper height (has content). Insert an zero-width-space if empty */}
-      {empty && <>&#8203;</>}
-    </div>
+  const blockValidation = useMemo(() => getValidationMarkers(markers), [markers])
+  const errors = useMemo(() => blockValidation.filter((mrkr) => mrkr.level === 'error'), [
+    blockValidation,
+  ])
+  const warnings = useMemo(() => blockValidation.filter((mrkr) => mrkr.level === 'warning'), [
+    blockValidation,
+  ])
+  const empty = useMemo(() => markers.length === 0 && !renderBlockActions, [
+    markers.length,
+    renderBlockActions,
+  ])
+  const allowedDecorators = useMemo(
+    () => portableTextFeatures.decorators.map((item) => item.value),
+    [portableTextFeatures]
   )
-  const path = PortableTextEditor.getSelection(editor)?.focus.path
-  const hasFocus = path && isKeySegment(path[0]) ? path[0]._key === block._key : false
-  const returned = showChangeIndicator ? (
-    <ChangeIndicatorWithProvidedFullPath
-      className={styles.changeIndicator}
-      compareDeep
-      value={block}
-      hasFocus={hasFocus}
-      path={[{_key: block._key}]}
-    >
-      {content}
-    </ChangeIndicatorWithProvidedFullPath>
-  ) : (
-    content
+  const RenderComponent = renderBlockActions
+  const blockActions = useMemo(
+    () =>
+      renderBlockActions ? (
+        <RenderComponent
+          block={block}
+          value={value}
+          set={createBlockActionPatchFn('set', block, onChange, allowedDecorators)}
+          unset={
+            createBlockActionPatchFn('unset', block, onChange, allowedDecorators) as () => void
+          }
+          insert={createBlockActionPatchFn('insert', block, onChange, allowedDecorators)}
+        />
+      ) : null,
+    [RenderComponent, allowedDecorators, block, onChange, renderBlockActions, value]
+  )
+
+  const blockExtras = useMemo(
+    () => (
+      <div className={styles.content}>
+        {markers.length > 0 && (
+          <div className={styles.markers}>
+            <Markers
+              className={styles.markers}
+              markers={markers}
+              scopedValidation={blockValidation}
+              onFocus={onFocus}
+              renderCustomMarkers={renderCustomMarkers}
+            />
+          </div>
+        )}
+        {blockActions && <div className={styles.blockActions}>{blockActions}</div>}
+        {/* Make sure it gets proper height (has content). Insert an zero-width-space if empty */}
+        {empty && <>&#8203;</>}
+      </div>
+    ),
+    [blockActions, blockValidation, empty, markers, onFocus, renderCustomMarkers]
+  )
+  const path = useMemo(() => PortableTextEditor.getSelection(editor)?.focus.path, [editor])
+  const hasFocus = useMemo(
+    () => (path && isKeySegment(path[0]) ? path[0]._key === block._key : false),
+    [block._key, path]
+  )
+  const blockExtrasWithOrWithoutChanges = useMemo(
+    () =>
+      showChangeIndicator ? (
+        <ChangeIndicatorWithProvidedFullPath
+          className={styles.changeIndicator}
+          compareDeep
+          value={block}
+          hasFocus={hasFocus}
+          path={[{_key: block._key}]}
+        >
+          {blockExtras}
+        </ChangeIndicatorWithProvidedFullPath>
+      ) : (
+        blockExtras
+      ),
+    [block, blockExtras, hasFocus, showChangeIndicator]
   )
   return (
     <div
@@ -100,7 +124,7 @@ export default function BlockExtras(props: Props) {
         warnings.length > 0 && !errors.length && styles.withWarning,
       ])}
     >
-      {returned}
+      {blockExtrasWithOrWithoutChanges}
     </div>
   )
 }
