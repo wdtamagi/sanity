@@ -6,18 +6,15 @@ import {
   Type,
   PortableTextEditor,
 } from '@sanity/portable-text-editor'
-import classNames from 'classnames'
-import React, {useCallback, useMemo} from 'react'
-import {Path, SchemaType} from '@sanity/types'
+import React, {useMemo, useCallback} from 'react'
+import {Path} from '@sanity/types'
 import {FOCUS_TERMINATOR} from '@sanity/util/paths'
+import {Box, Card, Flex, Stack, useToast} from '@sanity/ui'
 import {resolveInitialValueForType} from '@sanity/initial-value-templates'
-import {useToast} from '@sanity/ui'
 import ActionMenu from './ActionMenu'
-import BlockStyleSelect from './BlockStyleSelect'
 import InsertMenu from './InsertMenu'
 import {getBlockStyleSelectProps, getInsertMenuItems, getPTEToolbarActionGroups} from './helpers'
-
-import styles from './Toolbar.css'
+import {BlockStyleMenu} from './BlockStyleMenu'
 
 const SLOW_INITIAL_VALUE_LIMIT = 300
 
@@ -125,36 +122,46 @@ function PTEToolbar(props: Props) {
   )
 
   return (
-    <div
-      className={classNames(styles.root, isFullscreen && styles.fullscreen)}
+    <Card
       // Ensure the editor doesn't lose focus when interacting
       // with the toolbar (prevent focus click events)
       onMouseDown={preventDefault}
       onKeyPress={preventDefault}
+      style={{lineHeight: 0}}
     >
-      {blockStyleSelectProps && blockStyleSelectProps.items.length > 1 && (
-        <div className={styles.blockStyleSelectContainer}>
-          <BlockStyleSelect
-            {...blockStyleSelectProps}
-            className={styles.blockStyleSelect}
-            disabled={disabled}
-            padding="small"
-            readOnly={readOnly}
-            renderBlock={renderBlock}
-          />
-        </div>
-      )}
-      {actionsLen > 0 && (
-        <div className={styles.actionMenuContainer}>
-          <ActionMenu disabled={disabled} groups={actionGroups} readOnly={readOnly} />
-        </div>
-      )}
-      {insertMenuItems.length > 0 && (
-        <div className={styles.insertMenuContainer}>
-          <InsertMenu disabled={disabled} items={insertMenuItems} readOnly={readOnly} />
-        </div>
-      )}
-    </div>
+      <Flex wrap="nowrap">
+        {blockStyleSelectProps && blockStyleSelectProps.items.length > 1 && (
+          <Stack padding={isFullscreen ? 2 : 1} style={{minWidth: '8em', whiteSpace: 'nowrap'}}>
+            <BlockStyleMenu
+              disabled={disabled}
+              items={blockStyleSelectProps.items}
+              readOnly={readOnly}
+              renderBlock={renderBlock}
+              value={blockStyleSelectProps.value}
+            />
+          </Stack>
+        )}
+
+        {actionsLen > 0 && (
+          <Box
+            flex={1}
+            padding={isFullscreen ? 2 : 1}
+            style={{borderLeft: '1px solid var(--card-border-color)'}}
+          >
+            <ActionMenu disabled={disabled} groups={actionGroups} readOnly={readOnly} />
+          </Box>
+        )}
+
+        {insertMenuItems.length > 0 && (
+          <Box
+            padding={isFullscreen ? 2 : 1}
+            style={{borderLeft: '1px solid var(--card-border-color)'}}
+          >
+            <InsertMenu disabled={disabled} items={insertMenuItems} readOnly={readOnly} />
+          </Box>
+        )}
+      </Flex>
+    </Card>
   )
 }
 

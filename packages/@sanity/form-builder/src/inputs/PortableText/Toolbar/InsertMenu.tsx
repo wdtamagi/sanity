@@ -1,10 +1,7 @@
-import React, {useCallback, useMemo} from 'react'
-import {Button} from '@sanity/ui'
+import React from 'react'
+import {Button, Menu, MenuButton, MenuItem} from '@sanity/ui'
 import {AddIcon} from '@sanity/icons'
-import {MenuButton} from '../../../legacyParts'
 import {BlockItem} from './types'
-
-import styles from './InsertMenu.css'
 
 interface InsertMenuProps {
   disabled: boolean
@@ -14,75 +11,41 @@ interface InsertMenuProps {
 
 export default function InsertMenu(props: InsertMenuProps) {
   const {disabled, items, readOnly} = props
-  const [open, setOpen] = React.useState(false)
-
-  const handleClose = useCallback(() => {
-    setOpen(false)
-  }, [])
-
-  const menu = useMemo(
-    () => (
-      <div className={styles.menu}>
-        {items.map((item) => (
-          <InsertMenuItem item={item} onClick={handleClose} key={item.key} />
-        ))}
-      </div>
-    ),
-    [handleClose, items]
-  )
 
   return (
-    <div className={styles.root}>
-      <MenuButton
-        buttonProps={{
-          'aria-label': 'Insert elements',
-          'aria-haspopup': 'menu',
-          'aria-expanded': open,
-          'aria-controls': 'insertmenu',
-          disabled: disabled || readOnly,
-          icon: AddIcon,
-          mode: 'bleed',
-          padding: 2,
-          selected: open,
-          title: 'Insert elements',
-        }}
-        menu={menu}
-        open={open}
-        placement="bottom"
-        portal
-        setOpen={setOpen}
-      />
-    </div>
-  )
-}
+    <MenuButton
+      button={
+        <Button
+          disabled={disabled || readOnly}
+          icon={AddIcon}
+          mode="bleed"
+          padding={2}
+          style={{verticalAlign: 'top'}}
+          title="Insert element"
+        />
+      }
+      id="insert-menu"
+      menu={
+        <Menu>
+          {items.map((item) => {
+            const title = item.type.title || item.type.type.name
+            const handleClick = item.handle
 
-function InsertMenuItem({
-  item,
-  onClick,
-}: {
-  item: BlockItem
-  onClick: (event: React.MouseEvent<HTMLButtonElement>) => void
-}) {
-  const handleClick = useCallback(
-    (event: React.MouseEvent<HTMLButtonElement>) => {
-      item.handle()
-      if (onClick) onClick(event)
-    },
-    [item, onClick]
-  )
-
-  const title = item.type.title || item.type.type.name
-
-  return (
-    <Button
-      aria-label={`Insert ${title}${item.inline ? ' (inline)' : ' (block)'}`}
-      mode="bleed"
-      className={styles.menuItem}
-      disabled={item.disabled}
-      icon={item.icon}
-      onClick={handleClick}
-      title={`Insert ${title}${item.inline ? ' (inline)' : ' (block)'}`}
-      text={title}
+            return (
+              <MenuItem
+                aria-label={`Insert ${title}${item.inline ? ' (inline)' : ' (block)'}`}
+                icon={item.icon}
+                key={item.key}
+                onClick={handleClick}
+                text={title}
+                title={`Insert ${title}${item.inline ? ' (inline)' : ' (block)'}`}
+              />
+            )
+          })}
+        </Menu>
+      }
+      placement="bottom"
+      portal
     />
   )
 }

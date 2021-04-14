@@ -1,11 +1,22 @@
 import React, {useMemo} from 'react'
-
-import styles from './CustomIcon.css'
+import styled from 'styled-components'
 
 interface Props {
   icon: string
   active: boolean
 }
+
+const Root = styled.span`
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  border-radius: inherit;
+  background-origin: content-box;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  transform: scale(0.7);
+`
 
 export default function CustomIcon(props: Props) {
   const {icon, active} = props
@@ -18,5 +29,5 @@ export default function CustomIcon(props: Props) {
     [active, icon]
   )
 
-  return <div className={styles.root} style={inlineStyle} />
+  return <Root style={inlineStyle} />
 }

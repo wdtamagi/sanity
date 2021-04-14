@@ -56,11 +56,11 @@
 .toolbarContainer {
   min-width: 0;
   flex: 1;
-  height: 41px;
+  /* height: 41px; */
 
-  @nest .fullscreenPortal & {
+  /* @nest .fullscreenPortal & {
     height: 49px;
-  }
+  } */
 }
 
 .validationContainer {

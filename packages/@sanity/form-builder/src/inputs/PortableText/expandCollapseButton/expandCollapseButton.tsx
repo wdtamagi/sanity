@@ -19,6 +19,7 @@ export function ExpandCollapseButton(props: Props) {
       mode="bleed"
       onClick={onToggleFullscreen}
       padding={2}
+      style={{verticalAlign: 'top'}}
       title={`Open in fullscreen (${IS_MAC ? 'cmd' : 'ctrl'}+enter)`}
     />
   )

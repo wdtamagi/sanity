@@ -1,9 +1,7 @@
-import classNames from 'classnames'
-import React, {useEffect, useRef, useState, useMemo, useCallback} from 'react'
+import React, {useEffect, useRef, useState, useMemo} from 'react'
 import {EllipsisHorizontalIcon} from '@sanity/icons'
-import {MenuButton} from '../../../legacyParts'
-
-import styles from './OverflowMenu.css'
+import {Box, Button, Flex, Inline, Menu, MenuButton, MenuItem} from '@sanity/ui'
+import styled from 'styled-components'
 
 interface Action {
   firstInGroup?: boolean
@@ -12,28 +10,26 @@ interface Action {
 }
 
 interface Props {
-  actionButtonComponent: React.ComponentType<{action: Action; disabled: boolean; visible: boolean}>
-  actionMenuItemComponent: React.ComponentType<{
-    action: Action
-    disabled: boolean
-    onClose: () => void
-  }>
   actions: Action[]
   disabled?: boolean
 }
 
-const preventDefault = (event: any) => {
-  event.preventDefault()
-  event.stopPropagation()
-}
+const ButtonBox = styled.div`
+  &[data-first-in-group]:not(:first-child) {
+    &:before {
+      content: '';
+      display: block;
+      border-left: 1px solid var(--card-border-color);
+    }
+  }
+
+  &[data-visible='false'] {
+    visibility: hidden;
+  }
+`
 
 export function OverflowMenu(props: Props) {
-  const {
-    actionButtonComponent: ActionButton,
-    actionMenuItemComponent: ActionMenuItem,
-    actions,
-    disabled,
-  } = props
+  const {actions, disabled} = props
   const actionBarRef = useRef<HTMLDivElement | null>(null)
   const [actionStates, setActionStates] = useState(
     actions.map((__, index) => ({index, visible: false}))
@@ -45,8 +41,6 @@ export function OverflowMenu(props: Props) {
   const hiddenActions = useMemo(() => actionStates.filter((a) => !a.visible), [actionStates])
   const lastHidden = hiddenActions.length === 1
   const ioRef = useRef<IntersectionObserver | null>(null)
-  const [open, setOpen] = useState(false)
-  const handleClose = useCallback(() => () => setOpen(false), [])
 
   useEffect(() => {
     const actionBar = actionBarRef.current
@@ -92,61 +86,81 @@ export function OverflowMenu(props: Props) {
   }, [lastHidden])
 
   return (
-    <div className={styles.root}>
-      <div className={styles.actionBar} ref={actionBarRef}>
-        {actions.map((action, actionIndex) => (
-          <div
-            className={classNames(styles.actionButton, action.firstInGroup && styles.firstInGroup)}
-            data-index={actionIndex}
-            data-visible={actionStates[actionIndex].visible}
-            key={String(actionIndex)}
-          >
-            <ActionButton
-              action={action}
-              disabled={disabled}
-              visible={actionStates[actionIndex].visible}
-            />
-          </div>
-        ))}
-      </div>
-      <div className={styles.overflowButton} hidden={!showOverflowButton}>
+    <Flex>
+      <Box flex={1}>
+        <Inline ref={actionBarRef} space={1} style={{whiteSpace: 'nowrap'}}>
+          {actions.map((action, actionIndex) => {
+            const title = action.hotkeys
+              ? `${action.title} (${action.hotkeys.join('+')})`
+              : action.title
+
+            const handleClick = action.handle
+
+            return (
+              <ButtonBox
+                data-first-in-group={action.firstInGroup ? '' : undefined}
+                data-index={actionIndex}
+                data-visible={actionStates[actionIndex].visible}
+                key={String(actionIndex)}
+              >
+                <Button
+                  aria-hidden={!action.visible}
+                  data-visible={action.visible}
+                  disabled={action.disabled || disabled}
+                  icon={action.icon}
+                  mode="bleed"
+                  padding={2}
+                  onClick={handleClick}
+                  tabIndex={action.isible ? 0 : -1}
+                  selected={action.active}
+                  title={title}
+                />
+              </ButtonBox>
+            )
+          })}
+        </Inline>
+      </Box>
+
+      <Box hidden={!showOverflowButton} paddingLeft={1}>
         <MenuButton
-          buttonProps={{
-            'aria-label': 'Menu',
-            'aria-haspopup': 'menu',
-            'aria-expanded': open,
-            'aria-controls': 'insertmenu',
-            icon: EllipsisHorizontalIcon,
-            kind: 'simple',
-            padding: 'small',
-            selected: open,
-            title: 'More actions',
-          }}
+          button={
+            <Button
+              disabled={disabled}
+              icon={EllipsisHorizontalIcon}
+              mode="bleed"
+              padding={2}
+              title="More actions"
+            />
+          }
+          id="overflow-menu"
           menu={
-            <div className={styles.overflowMenu}>
+            <Menu>
               {hiddenActions.map((hiddenAction, hiddenActionIndex) => {
                 const action = actions[hiddenAction.index]
+
+                const title = action.hotkeys
+                  ? `${action.title} (${action.hotkeys.join('+')})`
+                  : action.title
+
+                const handleClick = action.handle
+
                 return (
-                  <div
-                    className={classNames(
-                      styles.menuItem,
-                      action.firstInGroup && styles.firstInGroup
-                    )}
-                    key={String(hiddenActionIndex)}
-                    onMouseDown={preventDefault} // Needed so the editor doesn't reset selection
-                  >
-                    <ActionMenuItem action={action} disabled={disabled} onClose={handleClose} />
-                  </div>
+                  <MenuItem
+                    disabled={action.disabled || disabled}
+                    icon={action.icon}
+                    key={hiddenActionIndex}
+                    onClick={handleClick}
+                    selected={action.active}
+                    text={title}
+                  />
                 )
               })}
-            </div>
+            </Menu>
           }
-          open={open}
           placement="bottom"
           portal
-          setOpen={setOpen}
         />
-      </div>
-    </div>
+      </Box>
+    </Flex>
   )
 }
