@@ -30,6 +30,7 @@
     "@sanity/desk-tool": "2.10.5",
     "@sanity/form-builder": "2.10.5",
     "@sanity/google-maps-input": "2.10.5",
+    "@sanity/icons": "^1.0.10",
     "@sanity/image-url": "^0.140.19",
     "@sanity/production-preview": "2.2.6",
     "@sanity/react-hooks": "2.10.5",

@@ -29,28 +29,29 @@ interface Props {
 }
 
 export const EditForm = memo((props: Props) => {
-  const presence = useDocumentPresence(props.id)
-  const subscriptionRef = useRef<Subscription | null>(null)
-  const patchChannel = useMemo(() => FormBuilder.createPatchChannel(), [])
   const {
+    compareValue,
     filterField,
     focusPath,
+    id,
     markers,
-    value,
     onBlur,
     onFocus,
     onChange,
-    compareValue,
     readOnly,
     schema,
     type,
+    value,
   } = props
+  const presence = useDocumentPresence(id)
+  const subscriptionRef = useRef<Subscription | null>(null)
+  const patchChannel = useMemo(() => FormBuilder.createPatchChannel(), [])
 
   useEffect(() => {
     subscriptionRef.current = documentStore.pair
-      .documentEvents(props.id, props.type.name)
+      .documentEvents(id, type.name)
       .pipe(
-        tap((event: any) => {
+        tap((event: unknown) => {
           patchChannel.receiveEvent(event)
         })
       )
@@ -62,7 +63,7 @@ export const EditForm = memo((props: Props) => {
         subscriptionRef.current = null
       }
     }
-  }, [])
+  }, [id, patchChannel, type])
 
   return (
     <form onSubmit={preventDefault}>

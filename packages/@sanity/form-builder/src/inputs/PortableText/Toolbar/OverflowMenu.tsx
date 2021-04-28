@@ -9,7 +9,7 @@ interface Action {
   [key: string]: any
 }
 
-interface Props {
+interface OverflowMenuProps {
   actions: Action[]
   disabled?: boolean
 }
@@ -28,18 +28,25 @@ const ButtonBox = styled.div`
   }
 `
 
-export function OverflowMenu(props: Props) {
+export function OverflowMenu(props: OverflowMenuProps) {
   const {actions, disabled} = props
+
   const actionBarRef = useRef<HTMLDivElement | null>(null)
+
   const [actionStates, setActionStates] = useState(
     actions.map((__, index) => ({index, visible: false}))
   )
+
   const actionStatesRef = useRef(actionStates)
+
   const showOverflowButton = useMemo(() => actionStates.filter((a) => !a.visible).length > 0, [
     actionStates,
   ])
+
   const hiddenActions = useMemo(() => actionStates.filter((a) => !a.visible), [actionStates])
+
   const lastHidden = hiddenActions.length === 1
+
   const ioRef = useRef<IntersectionObserver | null>(null)
 
   useEffect(() => {
@@ -148,6 +155,7 @@ export function OverflowMenu(props: Props) {
                   <MenuItem
                     disabled={action.disabled || disabled}
                     icon={action.icon}
+                    // eslint-disable-next-line react/no-array-index-key
                     key={hiddenActionIndex}
                     onClick={handleClick}
                     selected={action.active}

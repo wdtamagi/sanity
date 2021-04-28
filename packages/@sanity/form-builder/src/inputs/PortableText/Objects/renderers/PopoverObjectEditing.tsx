@@ -1,6 +1,4 @@
-/* eslint-disable react/prop-types */
-import React, {FunctionComponent, useEffect, useState} from 'react'
-
+import {FormFieldPresence, PresenceOverlay} from '@sanity/base/presence'
 import {
   PortableTextBlock,
   PortableTextChild,
@@ -8,11 +6,12 @@ import {
   Type,
   usePortableTextEditor,
 } from '@sanity/portable-text-editor'
-import {FormFieldPresence, PresenceOverlay} from '@sanity/base/presence'
 import {Path, Marker, SchemaType} from '@sanity/types'
+import {Placement} from '@sanity/ui'
+import React, {useEffect, useCallback, useMemo, useState} from 'react'
 import {FormBuilderInput} from '../../../../FormBuilderInput'
-import {PatchEvent} from '../../../../../PatchEvent'
-import {PopoverDialog} from '../../../../transitional/PopoverDialog'
+import {PatchEvent} from '../../../../PatchEvent'
+import {PopoverDialog} from '../../components/PopoverDialog'
 
 interface Props {
   editorPath: Path
@@ -29,7 +28,7 @@ interface Props {
   type: Type
 }
 
-export const PopoverObjectEditing: FunctionComponent<Props> = ({
+export function PopoverObjectEditing({
   editorPath,
   focusPath,
   markers,
@@ -42,29 +41,38 @@ export const PopoverObjectEditing: FunctionComponent<Props> = ({
   presence,
   readOnly,
   type,
-}) => {
+}: Props) {
   const editor = usePortableTextEditor()
-  const handleChange = (patchEvent: PatchEvent): void => onChange(patchEvent, path)
-  const getEditorElement = () => {
+
+  const handleChange = useCallback((patchEvent: PatchEvent): void => onChange(patchEvent, path), [
+    onChange,
+    path,
+  ])
+
+  const getEditorElement = useCallback(() => {
     const [editorObject] = PortableTextEditor.findByPath(editor, editorPath)
+    // eslint-disable-next-line react/no-find-dom-node
     return PortableTextEditor.findDOMNode(editor, editorObject) as HTMLElement
-  }
-  const [refElement, setRefElement] = useState(getEditorElement())
+  }, [editor, editorPath])
+
+  const [refElement, setRefElement] = useState(getEditorElement)
 
   useEffect(() => {
     setRefElement(getEditorElement())
-  }, [object])
+  }, [getEditorElement, object])
+
+  const fallbackPlacements: Placement[] = useMemo(() => ['top', 'bottom'], [])
 
   return (
     <PopoverDialog
-      fallbackPlacements={['top', 'bottom']}
+      fallbackPlacements={fallbackPlacements}
       placement="bottom"
       referenceElement={refElement}
       onClose={onClose}
       preventOverflow
       portal
-      title={type.title}
-      size="small"
+      header={type.title}
+      width={1}
     >
       <PresenceOverlay margins={[0, 0, 1, 0]}>
         <FormBuilderInput

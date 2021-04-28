@@ -15,14 +15,15 @@ import {
   InvalidValue,
 } from '@sanity/portable-text-editor'
 import {Subject} from 'rxjs'
-import {Box, useToast} from '@sanity/ui'
+import {Box, Button, Stack, useToast} from '@sanity/ui'
+import styled from 'styled-components'
 import PatchEvent from '../../PatchEvent'
 import withPatchSubscriber from '../../utils/withPatchSubscriber'
 import type {Patch} from '../../patch/types'
 import {RenderBlockActions, RenderCustomMarkers} from './types'
 import Input from './Input'
 import {InvalidValue as RespondToInvalidContent} from './InvalidValue'
-import styles from './PortableTextInput.css'
+// import styles from './PortableTextInput.css'
 
 export type PatchWithOrigin = Patch & {
   origin: 'local' | 'remote' | 'internal'
@@ -37,14 +38,14 @@ type PatchSubscriber = ({
   snapshot: PortableTextBlock[] | undefined
 }) => void
 
-type Props = {
+interface PortableTextInputProps {
   focusPath: Path
   hotkeys: HotkeyOptions
   level: number
   markers: Marker[]
   onBlur: () => void
   onChange: (event: PatchEvent) => void
-  onFocus: (path) => void
+  onFocus: (path?: Path) => void
   onCopy?: OnCopyFn
   onPaste?: OnPasteFn
   readOnly: boolean | null
@@ -56,8 +57,31 @@ type Props = {
   value: PortableTextBlock[] | undefined
 }
 
+const Root = styled.div`
+  position: relative;
+`
+
+const JumpToEditorBox = styled(Stack)`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  &:not(:focus-within) {
+    height: 1px;
+    width: 1px;
+    margin: 0;
+    overflow: hidden;
+    clip: rect(1px, 1px, 1px, 1px);
+  }
+
+  &:focus-within {
+    z-index: 1000;
+  }
+`
+
 const PortableTextInputWithRef = React.forwardRef(function PortableTextInput(
-  props: Omit<Props, 'level'>,
+  props: Omit<PortableTextInputProps, 'level'>,
   ref: React.RefObject<PortableTextEditor>
 ) {
   const {
@@ -111,8 +135,11 @@ const PortableTextInputWithRef = React.forwardRef(function PortableTextInput(
 
   // Handle editor changes
   const [hasFocus, setHasFocus] = useState(false)
+
   const handleEditorChange = useCallback(
     (change: EditorChange): void => {
+      console.log('change', change)
+
       switch (change.type) {
         case 'mutation':
           // Don't wait for the result
@@ -159,6 +186,7 @@ const PortableTextInputWithRef = React.forwardRef(function PortableTextInput(
 
   // Render error message and resolution
   let respondToInvalidContent = null
+
   if (invalidValue) {
     respondToInvalidContent = (
       <Box marginBottom={2}>
@@ -174,50 +202,58 @@ const PortableTextInputWithRef = React.forwardRef(function PortableTextInput(
   const [isFullscreen, setIsFullscreen] = useState(false)
   const handleToggleFullscreen = useCallback(() => setIsFullscreen(!isFullscreen), [isFullscreen])
   const editorId = useMemo(() => uniqueId('PortableTextInputRoot'), [])
+
   const editorInput = useMemo(
     () => (
-      <PortableTextEditor
-        ref={ref}
-        incomingPatche$={patche$.asObservable()}
-        key={`portable-text-editor-${editorId}`}
-        onChange={handleEditorChange}
-        maxBlocks={undefined} // TODO: from schema?
-        readOnly={readOnly}
-        type={type}
-        value={value}
-      >
-        {!readOnly && (
-          <button
-            type="button"
-            tabIndex={0}
-            className={styles.focusSkipper}
-            onClick={handleFocusSkipper}
-          >
-            Jump to editor
-          </button>
-        )}
-        <Input
-          focusPath={focusPath}
-          hasFocus={hasFocus}
-          hotkeys={hotkeys}
-          isFullscreen={isFullscreen}
-          key={`portable-text-input-${editorId}`}
-          markers={markers}
-          onBlur={onBlur}
-          onChange={onChange}
-          onCopy={onCopy}
-          onFocus={onFocus}
-          onPaste={onPaste}
-          onToggleFullscreen={handleToggleFullscreen}
-          patche$={patche$}
-          presence={presence}
+      <Root>
+        <PortableTextEditor
+          data-ui="PortableTextEditor"
+          ref={ref}
+          incomingPatche$={patche$.asObservable()}
+          key={`portable-text-editor-${editorId}`}
+          onChange={handleEditorChange}
+          // TODO: from schema?
+          // maxBlocks={undefined}
           readOnly={readOnly}
-          renderBlockActions={renderBlockActions}
-          renderCustomMarkers={renderCustomMarkers}
-          type={props.type}
+          type={type}
           value={value}
-        />
-      </PortableTextEditor>
+        >
+          {!readOnly && (
+            <JumpToEditorBox padding={1}>
+              <Button
+                fontSize={1}
+                mode="bleed"
+                padding={2}
+                onClick={handleFocusSkipper}
+                // tabIndex={0}
+                text="Jump to editor"
+              />
+            </JumpToEditorBox>
+          )}
+
+          <Input
+            focusPath={focusPath}
+            hasFocus={hasFocus}
+            hotkeys={hotkeys}
+            isFullscreen={isFullscreen}
+            key={`portable-text-input-${editorId}`}
+            markers={markers}
+            onBlur={onBlur}
+            onChange={onChange}
+            onCopy={onCopy}
+            onFocus={onFocus}
+            onPaste={onPaste}
+            onToggleFullscreen={handleToggleFullscreen}
+            patche$={patche$}
+            presence={presence}
+            readOnly={readOnly}
+            renderBlockActions={renderBlockActions}
+            renderCustomMarkers={renderCustomMarkers}
+            type={props.type}
+            value={value}
+          />
+        </PortableTextEditor>
+      </Root>
     ),
     [
       editorId,
@@ -245,6 +281,7 @@ const PortableTextInputWithRef = React.forwardRef(function PortableTextInput(
       value,
     ]
   )
+
   return (
     <>
       {invalidValue && !ignoreValidationError && respondToInvalidContent}
@@ -253,21 +290,24 @@ const PortableTextInputWithRef = React.forwardRef(function PortableTextInput(
   )
 })
 
-export default withPatchSubscriber(
+export const PortableTextInput = withPatchSubscriber(
   class PortableTextInputWithFocusAndBlur extends React.Component<
-    Props & {children: React.ReactNode}
+    PortableTextInputProps & {children: React.ReactNode}
   > {
     editorRef: React.RefObject<PortableTextEditor> = React.createRef()
+
     focus() {
       if (this.editorRef.current) {
         PortableTextEditor.focus(this.editorRef.current)
       }
     }
+
     blur() {
       if (this.editorRef.current) {
         PortableTextEditor.blur(this.editorRef.current)
       }
     }
+
     render() {
       const {type, level, markers, presence} = this.props
       return (

@@ -1,13 +1,3 @@
-/* eslint-disable react/no-multi-comp */
-
-import {
-  EditorSelection,
-  HotkeyOptions,
-  PortableTextEditor,
-  PortableTextFeature,
-  Type,
-} from '@sanity/portable-text-editor'
-
 import {
   LinkIcon,
   BoldIcon,
@@ -21,30 +11,40 @@ import {
   InlineElementIcon,
   UnknownIcon,
 } from '@sanity/icons'
-
+import {
+  EditorSelection,
+  HotkeyOptions,
+  PortableTextEditor,
+  PortableTextFeature,
+  Type,
+} from '@sanity/portable-text-editor'
 import {get} from 'lodash'
 import React from 'react'
-import CustomIcon from './CustomIcon'
+import {isValidElementType} from 'react-is'
+import {CustomIcon} from './CustomIcon'
 import {BlockItem, BlockStyleItem, PTEToolbarAction, PTEToolbarActionGroup} from './types'
+
+const FORMAT_ICONS = {
+  strong: BoldIcon,
+  em: ItalicIcon,
+  underline: UnderlineIcon,
+  'strike-through': StrikethroughIcon,
+  code: CodeIcon,
+}
 
 function getFormatIcon(
   type: string,
   schemaIcon?: React.ComponentType | string
 ): React.ComponentType {
-  switch (type) {
-    case 'strong':
-      return BoldIcon
-    case 'em':
-      return ItalicIcon
-    case 'underline':
-      return UnderlineIcon
-    case 'strike-through':
-      return StrikethroughIcon
-    case 'code':
-      return CodeIcon
-    default:
-      return (typeof schemaIcon === 'function' && schemaIcon) || UnknownIcon
+  if (FORMAT_ICONS[type]) {
+    return FORMAT_ICONS[type]
   }
+
+  if (isValidElementType(schemaIcon)) {
+    return schemaIcon
+  }
+
+  return UnknownIcon
 }
 
 function getPTEFormatActions(
@@ -78,29 +78,19 @@ function getPTEFormatActions(
 }
 
 function getListIcon(item: PortableTextFeature, active: boolean): React.ComponentType {
-  let Icon: React.ComponentType
+  const icon = item.blockEditor?.icon
 
-  const icon = item.blockEditor ? item.blockEditor.icon : null
-
-  if (icon) {
-    if (typeof icon === 'string') {
-      // eslint-disable-next-line react/display-name
-      Icon = (): JSX.Element => <CustomIcon icon={icon} active={!!active} />
-    } else if (typeof icon === 'function') {
-      Icon = icon
-    }
+  if (typeof icon === 'string') {
+    // eslint-disable-next-line react/display-name
+    return () => <CustomIcon icon={icon} active={!!active} />
+  } else if (isValidElementType(icon)) {
+    return icon
   }
 
-  if (Icon) return Icon
+  if (item.value === 'number') return OlistIcon
+  if (item.value === 'bullet') return UlistIcon
 
-  switch (item.value) {
-    case 'number':
-      return OlistIcon
-    case 'bullet':
-      return UlistIcon
-    default:
-      return UnknownIcon
-  }
+  return UnknownIcon
 }
 
 function getPTEListActions(
@@ -123,36 +113,24 @@ function getPTEListActions(
   })
 }
 
-// eslint-disable-next-line complexity
 function getAnnotationIcon(item: PortableTextFeature, active: boolean): React.ComponentType {
-  let Icon: React.ComponentType
-
-  const icon: React.ComponentType | string | undefined =
-    // @todo: Can this be removed?
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (item as any).icon ||
+  const icon =
+    get(item, 'icon') ||
     get(item, 'blockEditor.icon') ||
     get(item, 'type.icon') ||
     get(item, 'type.to.icon') ||
     get(item, 'type.to[0].icon')
 
-  if (icon) {
-    if (typeof icon === 'string') {
-      // eslint-disable-next-line react/display-name
-      Icon = (): JSX.Element => <CustomIcon icon={icon} active={!!active} />
-    } else if (typeof icon === 'function') {
-      Icon = icon
-    }
+  if (typeof icon === 'string') {
+    // eslint-disable-next-line react/display-name
+    return () => <CustomIcon icon={icon} active={!!active} />
+  } else if (isValidElementType(icon)) {
+    return icon as React.ComponentType
   }
 
-  if (Icon) return Icon
+  if (item.value === 'link') return LinkIcon
 
-  switch (item.value) {
-    case 'link':
-      return LinkIcon
-    default:
-      return UnknownIcon
-  }
+  return UnknownIcon
 }
 
 function getPTEAnnotationActions(
@@ -232,9 +210,7 @@ export function getBlockStyleSelectProps(
 }
 
 function getInsertMenuIcon(type: Type): React.ComponentType | null {
-  const referenceIcon = get(type, 'to[0].icon')
-
-  return type.icon || (type.type && type.type.icon) || referenceIcon
+  return type.icon || type.type?.icon || get(type, 'to[0].icon') || null
 }
 
 export function getInsertMenuItems(

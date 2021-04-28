@@ -1,4 +1,4 @@
-import {PortableTextBlock} from '@sanity/portable-text-editor'
+import {EditorSelectionPoint, PortableTextBlock} from '@sanity/portable-text-editor'
 import {Path, Marker} from '@sanity/types'
 
 export type ObjectEditData = {
@@ -11,8 +11,13 @@ export type RenderCustomMarkers = (markers: Marker[]) => JSX.Element
 
 export type RenderBlockActions = (actions: {
   block: PortableTextBlock
-  value: PortableTextBlock[] | undefined
+  value?: PortableTextBlock[]
   set: (block: PortableTextBlock) => void
   unset: () => void
   insert: (block: PortableTextBlock | PortableTextBlock[]) => void
 }) => JSX.Element
+
+export interface PortableTextEditorSelection {
+  anchor: EditorSelectionPoint
+  focus: EditorSelectionPoint
+}

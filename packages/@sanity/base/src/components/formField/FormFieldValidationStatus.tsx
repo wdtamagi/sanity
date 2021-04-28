@@ -58,6 +58,7 @@ export function FormFieldValidationStatus(props: FormFieldValidationStatusProps)
         </Stack>
       }
       placement={placement}
+      portal
       fallbackPlacements={['bottom', 'right', 'left']}
     >
       <div>

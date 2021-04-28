@@ -1,7 +1,7 @@
 import React, {useMemo} from 'react'
 import styled from 'styled-components'
 
-interface Props {
+interface CustomIconProps {
   icon: string
   active: boolean
 }
@@ -15,19 +15,21 @@ const Root = styled.span`
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  transform: scale(0.7);
+  /* transform: scale(0.7); */
 `
 
-export default function CustomIcon(props: Props) {
+export function CustomIcon(props: CustomIconProps) {
   const {icon, active} = props
 
-  const inlineStyle = useMemo(
-    () => ({
-      backgroundImage: `url(${icon})`,
-      filter: active ? 'invert(100%)' : 'invert(0%)',
-    }),
+  return useMemo(
+    () => (
+      <Root
+        style={{
+          backgroundImage: `url(${icon})`,
+          filter: active ? 'invert(100%)' : 'invert(0%)',
+        }}
+      />
+    ),
     [active, icon]
   )
-
-  return <Root style={inlineStyle} />
 }

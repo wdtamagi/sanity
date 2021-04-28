@@ -1,4 +1,3 @@
-/* eslint-disable react/no-find-dom-node */
 import React, {useState, useEffect, useMemo, useLayoutEffect, useCallback} from 'react'
 import {isKeySegment, Path, Marker} from '@sanity/types'
 import {FormFieldPresence} from '@sanity/base/presence'
@@ -9,11 +8,10 @@ import {
   PortableTextEditor,
   compactPatches,
   usePortableTextEditor,
+  PortableTextFeatures,
 } from '@sanity/portable-text-editor'
 import {get, debounce} from 'lodash'
-
 import {applyAll} from '../../../simplePatch'
-
 import type {Patch} from '../../../patch/types'
 import {ModalType} from '../../arrays/ArrayOfObjectsInput/types'
 import {PatchEvent} from '../../../PatchEvent'
@@ -26,7 +24,7 @@ const PATCHES: WeakMap<PortableTextEditor, Patch[]> = new WeakMap()
 const IS_THROTTLING: WeakMap<PortableTextEditor, boolean> = new WeakMap()
 const THROTTLE_MS = 300
 
-interface Props {
+interface EditObjectProps {
   focusPath: Path
   markers: Marker[]
   objectEditData: ObjectEditData
@@ -39,19 +37,20 @@ interface Props {
   value: PortableTextBlock[] | undefined
 }
 
-// eslint-disable-next-line complexity
-export const EditObject = ({
-  focusPath,
-  markers,
-  objectEditData,
-  onBlur,
-  onChange,
-  onClose,
-  onFocus,
-  presence,
-  readOnly,
-  value,
-}: Props) => {
+export function EditObject(props: EditObjectProps) {
+  const {
+    focusPath,
+    markers,
+    objectEditData,
+    onBlur,
+    onChange,
+    onClose,
+    onFocus,
+    presence,
+    readOnly,
+    value,
+  } = props
+
   const editor = usePortableTextEditor()
   const ptFeatures = useMemo(() => PortableTextEditor.getPortableTextFeatures(editor), [editor])
   const [_object, type] = useMemo(() => findObjectAndType(objectEditData, value, ptFeatures), [
@@ -146,6 +145,7 @@ export const EditObject = ({
       />
     )
   }
+
   if (
     editModalLayout === 'popover' ||
     (kind === 'annotation' && typeof editModalLayout === 'undefined')
@@ -167,6 +167,7 @@ export const EditObject = ({
       />
     )
   }
+
   return (
     <DefaultObjectEditing
       focusPath={focusPath}
@@ -185,14 +186,16 @@ export const EditObject = ({
 }
 
 function findObjectAndType(
-  objectEditData,
-  value,
-  ptFeatures
+  objectEditData: ObjectEditData,
+  value: PortableTextBlock[],
+  ptFeatures: PortableTextFeatures
 ): [PortableTextChild | undefined, Type | undefined] {
   if (!objectEditData) {
     return [undefined, undefined]
   }
+
   const {editorPath, formBuilderPath, kind} = objectEditData
+
   let object: PortableTextChild
   let type: Type
 
@@ -202,6 +205,7 @@ function findObjectAndType(
 
   const block =
     value && blockKey && Array.isArray(value) && value.find((blk) => blk._key === blockKey)
+
   const child =
     block &&
     block.children &&
@@ -214,12 +218,14 @@ function findObjectAndType(
         object = block
         type = ptFeatures.types.blockObjects.find((t) => t.name === block._type)
         break
+
       case 'inlineObject':
         object = child
         if (object) {
           type = ptFeatures.types.inlineObjects.find((t) => t.name === child._type)
         }
         break
+
       case 'annotation':
         if (child) {
           const markDef =
@@ -236,5 +242,6 @@ function findObjectAndType(
       // Nothing
     }
   }
+
   return [object, type]
 }

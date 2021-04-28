@@ -1,6 +1,6 @@
 import React from 'react'
-import Fieldset from 'part:@sanity/components/fieldsets/default'
 import {resolveTypeName} from '@sanity/util/content'
+import {FieldsetPart as Fieldset} from '../../legacyParts'
 import {FormBuilderInput} from '../../FormBuilderInput'
 import InvalidValue from '../InvalidValueInput'
 import styles from './styles/Field.css'

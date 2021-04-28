@@ -5,12 +5,12 @@ import {Button} from '@sanity/ui'
 const IS_MAC =
   typeof window != 'undefined' && /Mac|iPod|iPhone|iPad/.test(window.navigator.platform)
 
-interface Props {
+interface ExpandCollapseButtonProps {
   isFullscreen: boolean
   onToggleFullscreen: () => void
 }
 
-export function ExpandCollapseButton(props: Props) {
+export function ExpandCollapseButton(props: ExpandCollapseButtonProps) {
   const {isFullscreen, onToggleFullscreen} = props
 
   return (

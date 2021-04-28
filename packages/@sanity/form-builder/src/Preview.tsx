@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import {PreviewAny} from './utils/fallback-preview/PreviewAny'
+
 type PreviewProps = {
   layout?: string
   value?: any
@@ -12,6 +13,9 @@ export default class Preview extends React.PureComponent<PreviewProps, {}> {
   }
   render() {
     const {type, value} = this.props
+    if (!this.context.formBuilder) {
+      return <div>Missing form builder in context</div>
+    }
     const PreviewComponent = this.context.formBuilder.resolvePreviewComponent(type)
     if (PreviewComponent) {
       return <PreviewComponent {...this.props} />

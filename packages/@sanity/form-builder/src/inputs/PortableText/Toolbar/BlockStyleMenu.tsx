@@ -6,7 +6,7 @@ import {
   usePortableTextEditorSelection,
 } from '@sanity/portable-text-editor'
 import {Box, Button, Flex, Menu, MenuButton, MenuItem, Text} from '@sanity/ui'
-import React, {useCallback, useEffect, useMemo, useState} from 'react'
+import React, {createElement, useCallback, useEffect, useMemo, useState} from 'react'
 import {BlockStyleItem} from './types'
 
 export interface BlockStyleMenuProps {
@@ -123,11 +123,21 @@ function BlockStyleMenuItem({
     [blockType, item, spanType]
   )
 
-  const attributes = useMemo(() => ({focused: false, selected: false, path: []}), [])
+  const attributes = useMemo(
+    () => ({
+      focused: false,
+      selected: false,
+      path: [],
+    }),
+    []
+  )
 
   const renderFn = useCallback(() => {
-    const StyleComponent = item.styleComponent
-    return StyleComponent ? <StyleComponent>{item.title}</StyleComponent> : <>{item.title}</>
+    if (item.styleComponent) {
+      return createElement(item.styleComponent, {}, item.title)
+    }
+
+    return <>{item.title}</>
   }, [item])
 
   const blockNode = useMemo(
@@ -147,7 +157,7 @@ function BlockStyleMenuItem({
 
   return (
     <MenuItem onClick={handleClick} selected={selected}>
-      <Box paddingX={3}>{blockNode}</Box>
+      {blockNode}
     </MenuItem>
   )
 }

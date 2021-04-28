@@ -12,6 +12,7 @@
 
 .root {
   width: 100%;
+  outline: 20px solid red;
 }
 
 .previewContainer {

@@ -1,3 +1,5 @@
+import {ErrorOutlineIcon} from '@sanity/icons'
+
 export default {
   name: 'simpleBlock',
   title: 'Simple block',
@@ -10,6 +12,7 @@ export default {
     },
     {
       name: 'body',
+      description: 'A simple portable text field',
       title: 'Body',
       type: 'array',
       of: [
@@ -19,6 +22,20 @@ export default {
             annotations: [
               {type: 'object', name: 'link', fields: [{type: 'string', name: 'url'}]},
               {type: 'object', name: 'test', fields: [{type: 'string', name: 'mystring'}]},
+              {
+                type: 'object',
+                icon: ErrorOutlineIcon,
+                name: 'validated',
+                title: 'Validated',
+                fields: [
+                  {
+                    type: 'string',
+                    name: 'title',
+                    title: 'Title',
+                    validation: (Rule) => Rule.required(),
+                  },
+                ],
+              },
             ],
           },
           of: [

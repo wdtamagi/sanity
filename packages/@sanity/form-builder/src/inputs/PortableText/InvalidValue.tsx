@@ -4,7 +4,7 @@ import React, {useCallback} from 'react'
 import {Alert} from '../../components/Alert'
 
 interface InvalidValueProps {
-  onChange: (...args: any[]) => any
+  onChange: (mutation: any) => void
   onIgnore: () => void
   resolution: InvalidValueResolution
 }

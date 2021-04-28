@@ -1,50 +1,67 @@
-/* eslint-disable react/prop-types */
-import React, {FunctionComponent, SyntheticEvent} from 'react'
-import classNames from 'classnames'
-import {PortableTextChild, Type, RenderAttributes} from '@sanity/portable-text-editor'
-
-import {FOCUS_TERMINATOR} from '@sanity/util/paths'
+import {PortableTextChild, RenderAttributes} from '@sanity/portable-text-editor'
 import {Path, Marker, isValidationErrorMarker} from '@sanity/types'
-import {PatchEvent} from '../../../../PatchEvent'
+import {Card} from '@sanity/ui'
+import {FOCUS_TERMINATOR} from '@sanity/util/paths'
+import React, {SyntheticEvent, useCallback, useMemo} from 'react'
+import styled from 'styled-components'
 
-import styles from './Annotation.css'
-
-type Props = {
+export interface AnnotationProps {
   value: PortableTextChild
-  type: Type
   children: JSX.Element
   attributes: RenderAttributes
-  readOnly: boolean
   markers: Marker[]
-  onFocus: (path: Path) => void
-  onChange: (patchEvent: PatchEvent, path: Path) => void
+  onFocus: (path?: Path) => void
 }
 
-export const Annotation: FunctionComponent<Props> = ({
-  children,
-  markers,
-  attributes: {focused, selected, path},
-  value,
-  onFocus,
-}) => {
-  const errors = markers.filter(isValidationErrorMarker)
-  const classnames = classNames([
-    styles.root,
-    focused && styles.focused,
-    selected && styles.selected,
-    errors.length > 0 ? styles.error : styles.valid,
+const Root = styled(Card).attrs({forwardedAs: 'span'})`
+  &:not([hidden]) {
+    display: inline;
+  }
+
+  &[data-focused] {
+    color: var(--card-bg-color);
+    background-color: var(--card-fg-color);
+  }
+
+  &[data-selected] {
+    color: var(--card-bg-color);
+    background-color: var(--card-fg-color);
+  }
+`
+
+export function Annotation(props: AnnotationProps) {
+  const {
+    children,
+    markers,
+    attributes: {focused, selected, path},
+    value,
+    onFocus,
+  } = props
+  const errors = useMemo(() => markers.filter(isValidationErrorMarker), [markers])
+
+  const markDefPath = useMemo(() => [...path.slice(0, 1), 'markDefs', {_key: value._key}], [
+    path,
+    value,
   ])
 
-  const markDefPath = [...path.slice(0, 1), 'markDefs', {_key: value._key}]
+  const handleOpen = useCallback(
+    (event: SyntheticEvent<HTMLSpanElement>): void => {
+      event.preventDefault()
+      event.stopPropagation()
+      onFocus(markDefPath.concat(FOCUS_TERMINATOR))
+    },
+    [markDefPath, onFocus]
+  )
 
-  const handleOpen = (event: SyntheticEvent<HTMLSpanElement>): void => {
-    event.preventDefault()
-    event.stopPropagation()
-    onFocus(markDefPath.concat(FOCUS_TERMINATOR))
-  }
   return (
-    <span className={classnames} onClick={handleOpen}>
+    <Root
+      data-focused={focused ? '' : undefined}
+      data-selected={selected ? '' : undefined}
+      onClick={handleOpen}
+      radius={2}
+      tone={errors.length ? 'critical' : 'primary'}
+    >
       {children}
-    </span>
+    </Root>
   )
 }

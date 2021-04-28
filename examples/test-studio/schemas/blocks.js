@@ -1,24 +1,24 @@
-import React, {useMemo} from 'react'
+// import React, {useMemo} from 'react'
 import {
   MdRateReview as icon,
   MdPhotoLibrary as imageIcon,
   MdFormatColorFill as colorIcon,
 } from 'react-icons/md'
-import {BlockEditor} from 'part:@sanity/form-builder'
+// import {BlockEditor} from 'part:@sanity/form-builder'
 
-const CustomEditor = React.forwardRef((props, ref) => {
-  const {markers: markersProp, value} = props
-  const newMarkers = useMemo(
-    () =>
-      markersProp.concat([
-        {type: 'customMarkerTest', path: value && value[0] ? [{_key: value[0]._key}] : []},
-      ]),
-    [markersProp, value]
-  )
-  return <BlockEditor {...props} markers={newMarkers} ref={ref} />
-})
-CustomEditor.displayName = 'CustomEditor'
-CustomEditor.propTypes = BlockEditor.propTypes // eslint-disable-line react/forbid-foreign-prop-types
+// const CustomEditor = React.forwardRef((props, ref) => {
+//   const {markers: markersProp, value} = props
+//   const newMarkers = useMemo(
+//     () =>
+//       markersProp.concat([
+//         {type: 'customMarkerTest', path: value && value[0] ? [{_key: value[0]._key}] : []},
+//       ]),
+//     [markersProp, value]
+//   )
+//   return <BlockEditor {...props} markers={newMarkers} ref={ref} />
+// })
+// CustomEditor.displayName = 'CustomEditor'
+// CustomEditor.propTypes = BlockEditor && BlockEditor.propTypes // eslint-disable-line react/forbid-foreign-prop-types
 
 export default {
   name: 'blocksTest',
@@ -304,7 +304,7 @@ export default {
       name: 'withMarkers',
       title: 'With markers',
       type: 'array',
-      inputComponent: CustomEditor,
+      // inputComponent: CustomEditor,
       of: [{type: 'block'}],
     },
     {

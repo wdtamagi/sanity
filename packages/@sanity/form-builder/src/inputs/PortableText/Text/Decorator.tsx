@@ -1,10 +1,35 @@
 import React from 'react'
-import styles from './Decorator.css'
+import styled from 'styled-components'
 
-type Props = {
+interface DecoratorProps {
   mark: string
   children: React.ReactNode
 }
-export default function Decorator(props: Props) {
-  return <span className={`${styles.root} ${styles[props.mark]}`}>{props.children}</span>
+
+const Root = styled.span`
+  &[data-mark='overline'] {
+    text-decoration: overline;
+  }
+
+  &[data-mark='strike-through'] {
+    text-decoration: line-through;
+  }
+`
+
+const MARK_AS = {
+  strong: 'strong',
+  em: 'em',
+  code: 'code',
+  underline: 'u',
+}
+
+export function Decorator(props: DecoratorProps) {
+  const {children, mark} = props
+  const as = MARK_AS[mark]
+
+  return (
+    <Root as={as} data-ui="PTEDecorator" data-as={as} data-mark={mark}>
+      {children}
+    </Root>
+  )
 }

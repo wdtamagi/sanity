@@ -13,7 +13,7 @@ export interface ActionMenuProps {
   readOnly: boolean
 }
 
-export default function ActionMenu(props: ActionMenuProps) {
+export function ActionMenu(props: ActionMenuProps) {
   const {disabled, groups, readOnly} = props
   const editor = usePortableTextEditor()
   const selection = usePortableTextEditorSelection()

@@ -1,5 +1,5 @@
 import React from 'react'
-import DefaultButton from 'part:@sanity/components/buttons/default'
+import {DefaultButtonPart as DefaultButton} from '../../legacyParts'
 import styles from '../ObjectInput/styles/UnknownFields.css'
 import PatchEvent, {set, unset} from '../../PatchEvent'
 import Warning from '../Warning'

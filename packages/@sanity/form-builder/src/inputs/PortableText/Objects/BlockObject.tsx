@@ -1,6 +1,3 @@
-/* eslint-disable react/prop-types */
-import React, {FunctionComponent, SyntheticEvent, useCallback, useMemo, useRef} from 'react'
-import classNames from 'classnames'
 import {Path, Marker, isValidationErrorMarker} from '@sanity/types'
 import {
   PortableTextEditor,
@@ -8,20 +5,20 @@ import {
   Type,
   RenderAttributes,
 } from '@sanity/portable-text-editor'
+import {Box, Card, Theme} from '@sanity/ui'
 import {FOCUS_TERMINATOR} from '@sanity/util/paths'
-
-import {PatchEvent} from '../../../../PatchEvent'
-
+import React, {SyntheticEvent, useCallback, useMemo, useRef} from 'react'
+import styled, {css} from 'styled-components'
 import {useScrollIntoViewOnFocusWithin} from '../../../hooks/useScrollIntoViewOnFocusWithin'
 import {hasFocusWithinPath} from '../../../utils/focusUtils'
 import {BlockObjectPreview} from './BlockObjectPreview'
-import styles from './BlockObject.css'
+import {focusRingBorderStyle, focusRingStyle} from './styles'
 
-type Props = {
+interface BlockObjectProps {
   attributes: RenderAttributes
+  blockExtras?: React.ReactNode
   editor: PortableTextEditor
   markers: Marker[]
-  onChange: (patchEvent: PatchEvent, path: Path) => void
   onFocus: (path: Path) => void
   focusPath: Path
   readOnly: boolean
@@ -29,31 +26,72 @@ type Props = {
   value: PortableTextBlock
 }
 
-export const BlockObject: FunctionComponent<Props> = ({
-  attributes: {focused, selected, path},
-  editor,
-  markers,
-  focusPath,
-  onFocus,
-  readOnly,
-  type,
-  value,
-}): JSX.Element => {
-  const elementRef = useRef<HTMLDivElement>()
+const Root = styled(Box)(({theme}: {theme: Theme}) => {
+  const {focusRing, input} = theme.sanity
+  const {base, input: inputColor, muted} = theme.sanity.color
 
-  useScrollIntoViewOnFocusWithin(elementRef, hasFocusWithinPath(focusPath, value))
+  return css`
+    position: relative;
 
+    --block-object-box-shadow: ${focusRingBorderStyle({
+      color: inputColor.default.enabled.border,
+      width: input.border.width,
+    })};
+
+    & > [data-card] {
+      box-shadow: var(--block-object-box-shadow);
+    }
+
+    &[data-errors] {
+      & > div {
+        --card-bg-color: ${inputColor.invalid.enabled.bg};
+        --card-fg-color: ${inputColor.invalid.enabled.fg};
+      }
+
+      --block-object-box-shadow: ${focusRingBorderStyle({
+        color: inputColor.invalid.enabled.border,
+        width: input.border.width,
+      })};
+    }
+
+    &:not([data-read-only]) {
+      &[data-focused] {
+        --block-object-box-shadow: ${focusRingStyle({
+          base,
+          border: {
+            color: inputColor.default.enabled.border,
+            width: input.border.width,
+          },
+          focusRing,
+        })};
+      }
+
+      /* &[data-selected] {
+        & > div {
+          --card-bg-color: ${muted.primary.selected.bg};
+          --card-fg-color: ${muted.primary.selected.fg};
+          --card-border-color: ${muted.primary.selected.border};
+        }
+      } */
+    }
+  `
+})
+
+export function BlockObject(props: BlockObjectProps): React.ReactElement {
+  const {
+    attributes: {focused, selected, path},
+    blockExtras,
+    editor,
+    markers,
+    focusPath,
+    onFocus,
+    readOnly,
+    type,
+    value,
+  } = props
+
+  const elementRef = useRef<HTMLDivElement | null>(null)
   const errors = useMemo(() => markers.filter(isValidationErrorMarker), [markers])
-  const classnames = useMemo(
-    () =>
-      classNames([
-        styles.root,
-        focused && styles.focused,
-        selected && styles.selected,
-        errors.length > 0 && styles.hasErrors,
-      ]),
-    [errors.length, focused, selected]
-  )
 
   const handleClickToOpen = useCallback(
     (event: SyntheticEvent<HTMLElement>): void => {
@@ -87,21 +125,43 @@ export const BlockObject: FunctionComponent<Props> = ({
   const blockPreview = useMemo(() => {
     return (
       <BlockObjectPreview
+        onDelete={handleDelete}
+        onEdit={handleEdit}
+        // onFocus={onFocus}
+        // path={path}
+        readOnly={readOnly}
         type={type}
         value={value}
-        path={path}
-        readOnly={readOnly}
-        onFocus={onFocus}
-        onClickingDelete={handleDelete}
-        onClickingEdit={handleEdit}
       />
     )
-  }, [type, value, path, readOnly, onFocus, handleDelete, handleEdit])
+  }, [
+    type,
+    value,
+    // path,
+    readOnly,
+    // onFocus,
+    handleDelete,
+    handleEdit,
+  ])
+
+  useScrollIntoViewOnFocusWithin(elementRef, hasFocusWithinPath(focusPath, value))
+
   return (
-    <div className={classnames} ref={elementRef} onDoubleClick={handleClickToOpen}>
-      <div className={styles.previewContainer} style={readOnly ? {cursor: 'default'} : {}}>
+    <Root
+      data-errors={errors.length > 0 ? '' : undefined}
+      data-focused={focused ? '' : undefined}
+      data-read-only={readOnly ? '' : undefined}
+      data-selected={selected ? '' : undefined}
+      data-ui="PTEBlockObject"
+      padding={3}
+      ref={elementRef}
+      onDoubleClick={handleClickToOpen}
+    >
+      <Card data-card="" radius={1} style={readOnly ? {cursor: 'default'} : {}}>
         {blockPreview}
-      </div>
-    </div>
+      </Card>
+
+      {blockExtras}
+    </Root>
   )
 }

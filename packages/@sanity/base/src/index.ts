@@ -1,3 +1,5 @@
-export {default as DefaultRootComponent} from './components/DefaultRootComponent'
-export {UserStore} from './datastores/user/types'
-export * from './theme'
+// export {default as DefaultRootComponent} from './components/DefaultRootComponent'
+// export {UserStore} from './datastores/user/types'
+// export * from './theme'
+export {default as createSchema} from './schema/createSchema'
+export * from './legacy'

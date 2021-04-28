@@ -4,20 +4,25 @@ import assetUrlBuilder from 'part:@sanity/base/asset-url-builder'
 import PreviewComponentCard from 'part:@sanity/components/previews/card'
 import PreviewComponentDefault from 'part:@sanity/components/previews/default'
 import PreviewComponentDetail from 'part:@sanity/components/previews/detail'
-import PreviewComponentInline from 'part:@sanity/components/previews/inline'
+// import PreviewComponentInline from 'part:@sanity/components/previews/inline'
 import PreviewComponentMedia from 'part:@sanity/components/previews/media'
-import PreviewComponentBlock from 'part:@sanity/components/previews/block'
-import PreviewComponentBlockImage from 'part:@sanity/components/previews/block-image'
+// import PreviewComponentBlock from 'part:@sanity/components/previews/block'
+// import PreviewComponentBlockImage from 'part:@sanity/components/previews/block-image'
 import fileIcon from 'part:@sanity/base/file-icon'
 import {versionedClient} from '../../client/versionedClient'
+import {BlockPreview} from '../../components/_preview/BlockPreview'
+import {BlockImagePreview} from '../../components/_preview/BlockImagePreview'
+import {InlinePreview} from '../../components/_preview/InlinePreview'
 
 const previewComponentMap: {[key: string]: React.ComponentType<any>} = {
   default: PreviewComponentDefault,
   card: PreviewComponentCard,
   media: PreviewComponentMedia,
   detail: PreviewComponentDetail,
-  inline: PreviewComponentInline,
-  block: PreviewComponentBlock,
+  // inline: PreviewComponentInline,
+  inline: InlinePreview,
+  // block: PreviewComponentBlock,
+  block: BlockPreview,
 }
 
 function extractUploadState(value) {
@@ -119,7 +124,8 @@ export default class SanityDefaultPreview extends React.PureComponent<Props> {
       : previewComponentMap.default
 
     if (_renderAsBlockImage) {
-      PreviewComponent = PreviewComponentBlockImage
+      // PreviewComponent = PreviewComponentBlockImage
+      PreviewComponent = BlockImagePreview
     }
 
     const {_upload, value} = extractUploadState(this.props.value)

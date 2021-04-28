@@ -9,7 +9,7 @@ interface InsertMenuProps {
   readOnly: boolean
 }
 
-export default function InsertMenu(props: InsertMenuProps) {
+export function InsertMenu(props: InsertMenuProps) {
   const {disabled, items, readOnly} = props
 
   return (

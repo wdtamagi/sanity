@@ -8,19 +8,17 @@ import {
   PortableTextEditor,
 } from '@sanity/portable-text-editor'
 import {Path, SchemaType} from '@sanity/types'
-import {Box, Card, Flex, Stack, useToast} from '@sanity/ui'
+import {Box, Flex, Stack, useToast} from '@sanity/ui'
 import {FOCUS_TERMINATOR} from '@sanity/util/paths'
 import React, {useCallback, useMemo} from 'react'
-import ActionMenu from './ActionMenu'
-import InsertMenu from './InsertMenu'
-import {getBlockStyleSelectProps, getInsertMenuItems, getPTEToolbarActionGroups} from './helpers'
+import {ActionMenu} from './ActionMenu'
+import {InsertMenu} from './InsertMenu'
 import {BlockStyleMenu} from './BlockStyleMenu'
+import {useActionGroups} from './useActionGroups'
+import {useBlockStyleActions} from './useBlockStyleActions'
+import {useInsertMenuItems} from './useInsertMenuItems'
 
-const SLOW_INITIAL_VALUE_LIMIT = 300
-
-const preventDefault = (event) => event.preventDefault()
-
-interface Props {
+export interface ToolbarProps {
   hotkeys: HotkeyOptions
   isFullscreen: boolean
   readOnly: boolean
@@ -28,11 +26,18 @@ interface Props {
   onFocus: (path: Path) => void
 }
 
-function PTEToolbar(props: Props) {
+const SLOW_INITIAL_VALUE_LIMIT = 300
+
+function preventDefault(event: {preventDefault: () => void}) {
+  event.preventDefault()
+}
+
+export function Toolbar(props: ToolbarProps) {
   const {hotkeys, isFullscreen, readOnly, onFocus, renderBlock} = props
   const editor = usePortableTextEditor()
   const selection = usePortableTextEditorSelection()
   const disabled = !selection
+  // <<<<<<< HEAD
   const toast = useToast()
 
   const resolveInitialValue = useCallback(
@@ -106,66 +111,57 @@ function PTEToolbar(props: Props) {
     [editor, onFocus, resolveInitialValue]
   )
 
-  const actionGroups = useMemo(
-    () =>
-      editor ? getPTEToolbarActionGroups(editor, selection, handleInsertAnnotation, hotkeys) : [],
-    [editor, selection, handleInsertAnnotation, hotkeys]
-  )
+  const actionGroups = useActionGroups(editor, selection, handleInsertAnnotation, hotkeys)
   const actionsLen = useMemo(() => actionGroups.reduce((acc, x) => acc + x.actions.length, 0), [
     actionGroups,
   ])
-  const blockStyleSelectProps = useMemo(
-    () => (editor && selection ? getBlockStyleSelectProps(editor) : null),
-    [editor, selection]
-  )
-  const insertMenuItems = useMemo(
-    () =>
-      editor ? getInsertMenuItems(editor, selection, handleInsertBlock, handleInsertInline) : [],
-    [editor, handleInsertBlock, handleInsertInline, selection]
+  const blockStyleSelectProps = useBlockStyleActions(editor, selection)
+  const insertMenuItems = useInsertMenuItems(
+    editor,
+    selection,
+    handleInsertBlock,
+    handleInsertInline
   )
 
   return (
-    <Card
+    <Flex
       // Ensure the editor doesn't lose focus when interacting
       // with the toolbar (prevent focus click events)
       onMouseDown={preventDefault}
       onKeyPress={preventDefault}
       style={{lineHeight: 0}}
+      wrap="nowrap"
     >
-      <Flex wrap="nowrap">
-        {blockStyleSelectProps && blockStyleSelectProps.items.length > 1 && (
-          <Stack padding={isFullscreen ? 2 : 1} style={{minWidth: '8em', whiteSpace: 'nowrap'}}>
-            <BlockStyleMenu
-              disabled={disabled}
-              items={blockStyleSelectProps.items}
-              readOnly={readOnly}
-              renderBlock={renderBlock}
-              value={blockStyleSelectProps.value}
-            />
-          </Stack>
-        )}
+      {blockStyleSelectProps && blockStyleSelectProps.items.length > 1 && (
+        <Stack padding={isFullscreen ? 2 : 1} style={{minWidth: '8em', whiteSpace: 'nowrap'}}>
+          <BlockStyleMenu
+            disabled={disabled}
+            items={blockStyleSelectProps.items}
+            readOnly={readOnly}
+            renderBlock={renderBlock}
+            value={blockStyleSelectProps.value}
+          />
+        </Stack>
+      )}
 
-        {actionsLen > 0 && (
-          <Box
-            flex={1}
-            padding={isFullscreen ? 2 : 1}
-            style={{borderLeft: '1px solid var(--card-border-color)'}}
-          >
-            <ActionMenu disabled={disabled} groups={actionGroups} readOnly={readOnly} />
-          </Box>
-        )}
+      {actionsLen > 0 && (
+        <Box
+          flex={1}
+          padding={isFullscreen ? 2 : 1}
+          style={{borderLeft: '1px solid var(--card-border-color)'}}
+        >
+          <ActionMenu disabled={disabled} groups={actionGroups} readOnly={readOnly} />
+        </Box>
+      )}
 
-        {insertMenuItems.length > 0 && (
-          <Box
-            padding={isFullscreen ? 2 : 1}
-            style={{borderLeft: '1px solid var(--card-border-color)'}}
-          >
-            <InsertMenu disabled={disabled} items={insertMenuItems} readOnly={readOnly} />
-          </Box>
-        )}
-      </Flex>
-    </Card>
+      {insertMenuItems.length > 0 && (
+        <Box
+          padding={isFullscreen ? 2 : 1}
+          style={{borderLeft: '1px solid var(--card-border-color)'}}
+        >
+          <InsertMenu disabled={disabled} items={insertMenuItems} readOnly={readOnly} />
+        </Box>
+      )}
+    </Flex>
   )
 }
-
-export default PTEToolbar

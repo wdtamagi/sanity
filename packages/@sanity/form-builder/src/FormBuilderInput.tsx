@@ -8,11 +8,7 @@ import {FormFieldPresence, FormFieldPresenceContext} from '@sanity/base/presence
 import PatchEvent from './PatchEvent'
 import {emptyArray} from './utils/empty'
 
-const EMPTY_MARKERS: Marker[] = emptyArray()
-const EMPTY_PATH: Path = emptyArray()
-const EMPTY_PRESENCE: FormFieldPresence[] = emptyArray()
-
-interface Props {
+interface FormBuilderInputProps {
   value: unknown
   type: SchemaType
   onChange: (event: PatchEvent) => void
@@ -22,29 +18,31 @@ interface Props {
   presence?: FormFieldPresence[]
   focusPath: Path
   markers: Marker[]
-  compareValue?: any
+  compareValue?: unknown
   level: number
   isRoot?: boolean
   path: Path
-  filterField?: (...args: any[]) => any
+  filterField?: (...args: unknown[]) => unknown
   onKeyUp?: (ev: React.KeyboardEvent) => void
   onKeyPress?: (ev: React.KeyboardEvent) => void
 }
 
 interface Context {
   presence?: FormFieldPresence[]
-  formBuilder: any
-  getValuePath: any
+  formBuilder: unknown
+  getValuePath: unknown
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-const ENABLE_CONTEXT = () => {}
+const EMPTY_MARKERS: Marker[] = emptyArray()
+const EMPTY_PATH: Path = emptyArray()
+const EMPTY_PRESENCE: FormFieldPresence[] = emptyArray()
+const ENABLE_CONTEXT = () => undefined
 
-function getDisplayName(component) {
+function getDisplayName(component: React.ComponentType) {
   return component.displayName || component.name || 'Unknown'
 }
 
-export class FormBuilderInput extends React.Component<Props> {
+export class FormBuilderInput extends React.Component<FormBuilderInputProps> {
   scrollTimeout: number
   _element: HTMLDivElement | null
   static contextTypes = {
@@ -79,7 +77,7 @@ export class FormBuilderInput extends React.Component<Props> {
     }
   }
 
-  shouldComponentUpdate(nextProps) {
+  shouldComponentUpdate(nextProps: FormBuilderInputProps) {
     const {path: oldPath, focusPath: oldFocusPath, markers: oldMarkers, ...oldProps} = this.props
     const {path: newPath, focusPath: newFocusPath, markers: newMarkers, ...newProps} = nextProps
 
@@ -92,7 +90,7 @@ export class FormBuilderInput extends React.Component<Props> {
   }
 
   // eslint-disable-next-line camelcase
-  UNSAFE_componentWillReceiveProps(nextProps: Props) {
+  UNSAFE_componentWillReceiveProps(nextProps: FormBuilderInputProps) {
     const willHaveFocus = PathUtils.hasFocus(nextProps.focusPath, nextProps.path)
     const hasFocus = PathUtils.hasFocus(this.props.focusPath, this.props.path)
     if (willHaveFocus && !hasFocus) {
@@ -147,15 +145,15 @@ export class FormBuilderInput extends React.Component<Props> {
     )
   }
 
-  handleChange = (patchEvent) => {
+  handleChange = (patchEvent: PatchEvent) => {
     const {type, onChange} = this.props
-    if (type.readOnly) {
-      return
-    }
+
+    if (type.readOnly) return
+
     onChange(patchEvent)
   }
 
-  handleFocus = (nextPath) => {
+  handleFocus = (nextPath: Path) => {
     const {path, onFocus, focusPath} = this.props
     if (!onFocus) {
       // eslint-disable-next-line no-console
@@ -220,15 +218,29 @@ export class FormBuilderInput extends React.Component<Props> {
 
 interface FormBuilderInputInnerProps {
   childFocusPath: Path
-  component: any
+  component: React.ComponentType<{
+    compareValue: unknown
+    focusPath?: Path
+    isRoot: boolean
+    level: number
+    markers: Marker[]
+    onBlur: () => void
+    onChange: (patchEvent: PatchEvent) => void
+    onFocus: (path: Path) => void
+    presence: FormFieldPresence[]
+    readOnly: boolean
+    type: SchemaType
+    value: unknown
+    ref: React.Ref<{focus: () => void}>
+  }>
   context: Context
   onBlur: () => void
-  onChange: (patchEvent: any) => void
-  onFocus: (nextPath: any) => void
+  onChange: (patchEvent: PatchEvent) => void
+  onFocus: (nextPath: Path) => void
   setInput: (component: FormBuilderInput | HTMLDivElement | null) => void
 }
 
-function FormBuilderInputInner(props: FormBuilderInputInnerProps & Props) {
+function FormBuilderInputInner(props: FormBuilderInputInnerProps & FormBuilderInputProps) {
   const {
     childFocusPath,
     compareValue,

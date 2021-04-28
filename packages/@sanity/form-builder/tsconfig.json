@@ -1,11 +1,11 @@
 {
   "extends": "./tsconfig.strict",
+  "include": ["./src", "./test"],
   "compilerOptions": {
     // todo: we need to disable strict in a transition phase and should be removed eventually
     "noImplicitAny": false,
     "strictNullChecks": false,
     "strictFunctionTypes": false,
-
     "strictBindCallApply": false,
     "strictPropertyInitialization": false,
     "noImplicitThis": false

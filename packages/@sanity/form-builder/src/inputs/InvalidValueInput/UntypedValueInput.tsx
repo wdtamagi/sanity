@@ -1,6 +1,5 @@
 import React from 'react'
-import schema from 'part:@sanity/base/schema'
-import DefaultButton from 'part:@sanity/components/buttons/default'
+import {DefaultButtonPart as DefaultButton, schema} from '../../legacyParts'
 import PatchEvent, {setIfMissing, unset} from '../../PatchEvent'
 import styles from '../ObjectInput/styles/UnknownFields.css'
 import Warning from '../Warning'

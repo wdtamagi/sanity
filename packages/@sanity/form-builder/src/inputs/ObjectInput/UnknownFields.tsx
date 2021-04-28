@@ -1,9 +1,11 @@
 import React from 'react'
-import DefaultButton from 'part:@sanity/components/buttons/default'
+import {
+  ActivateOnFocusPart as ActivateOnFocus,
+  DefaultButtonPart as DefaultButton,
+} from '../../legacyParts'
 import PatchEvent, {unset} from '../../PatchEvent'
-import styles from './styles/UnknownFields.css'
-import ActivateOnFocus from 'part:@sanity/components/utilities/activate-on-focus'
 import {Details} from '../../components/Details'
+import styles from './styles/UnknownFields.css'
 
 type Props = {
   fieldNames: string[]

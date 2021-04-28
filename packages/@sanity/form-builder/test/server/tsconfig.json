@@ -1,0 +1,17 @@
+{
+  "extends": "../../tsconfig",
+  "compilerOptions": {
+    "rootDir": "../..",
+    "jsx": "react",
+    "baseUrl": "../..",
+    "paths": {
+      "@sanity/base": ["../base/src"],
+      "@sanity/base/*": ["../base/src/*"],
+      "@sanity/form-builder/*": ["./src/*"],
+      "@sanity/schema/lib/*": ["../schema/src/*"],
+      "@sanity/schema": ["../schema/src/legacy"],
+      "@sanity/types/*": ["../types/src/*"],
+      "@sanity/validation": ["../validation/src"]
+    }
+  }
+}

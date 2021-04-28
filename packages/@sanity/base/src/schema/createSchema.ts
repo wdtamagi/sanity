@@ -1,5 +1,5 @@
 import Schema from '@sanity/schema'
-import legacyRichDate from 'part:@sanity/form-builder/input/legacy-date/schema?'
+// import legacyRichDate from 'part:@sanity/form-builder/input/legacy-date/schema?'
 import validateSchema from '@sanity/schema/lib/sanity/validateSchema'
 import groupProblems from '@sanity/schema/lib/sanity/groupProblems'
 // eslint-disable-next-line import/no-unresolved
@@ -18,7 +18,9 @@ import fileAsset from './types/fileAsset'
 
 const isError = (problem) => problem.severity === 'error'
 
-module.exports = (schemaDef) => {
+export default createSchema
+
+function createSchema(schemaDef) {
   const validated = validateSchema(schemaDef.types).getTypes()
 
   const validation = groupProblems(validated)
@@ -31,7 +33,7 @@ module.exports = (schemaDef) => {
       assetSourceData,
       slug,
       geopoint,
-      legacyRichDate,
+      // legacyRichDate,
       imageAsset,
       fileAsset,
       imageCrop,
