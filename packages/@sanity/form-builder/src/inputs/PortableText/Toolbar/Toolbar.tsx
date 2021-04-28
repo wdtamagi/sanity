@@ -7,7 +7,7 @@ import {
   PortableTextEditor,
 } from '@sanity/portable-text-editor'
 import React, {useMemo, useCallback} from 'react'
-import {Path} from '@sanity/types'
+import {Path, SchemaType} from '@sanity/types'
 import {FOCUS_TERMINATOR} from '@sanity/util/paths'
 import {Box, Card, Flex, Stack, useToast} from '@sanity/ui'
 import {resolveInitialValueForType} from '@sanity/initial-value-templates'
