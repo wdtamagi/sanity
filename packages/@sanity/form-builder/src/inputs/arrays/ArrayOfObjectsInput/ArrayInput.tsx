@@ -9,7 +9,7 @@ import {
 } from '@sanity/types'
 import {FOCUS_TERMINATOR} from '@sanity/util/paths'
 import {isPlainObject} from 'lodash'
-import {FormFieldSet, ImperativeToast} from '@sanity/base/components'
+import {ImperativeToast} from '@sanity/base/components'
 import {Button, Stack, Text, Spinner, Flex, Card, Box, ToastParams} from '@sanity/ui'
 import React from 'react'
 import {map} from 'rxjs/operators'
@@ -293,7 +293,7 @@ export class ArrayInput extends React.Component<Props> {
           tabIndex={0}
           onFocus={this.handleFocus}
           ref={this.setFocusArea}
-          __unstable_markers={markers}
+          markers={markers}
         >
           <Alert
             status="error"
@@ -332,15 +332,15 @@ export class ArrayInput extends React.Component<Props> {
     const fieldPresence = presence.filter((item) => item.path.length === 0)
     return (
       <UploadTargetFieldset
-        __unstable_changeIndicator={false}
+        changeIndicator={false}
         tabIndex={0}
         title={type.title}
         description={type.description}
         onFocus={this.handleFocus}
         onBlur={onBlur}
         level={level - 1}
-        __unstable_presence={fieldPresence.length > 0 ? fieldPresence : EMPTY_ARRAY}
-        __unstable_markers={markers}
+        presence={fieldPresence.length > 0 ? fieldPresence : EMPTY_ARRAY}
+        markers={markers}
         disabled={!directUploads || readOnly}
         ref={this.setFocusArea}
         getUploadOptions={this.getUploadOptions}
