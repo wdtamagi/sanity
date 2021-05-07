@@ -20,6 +20,7 @@ const DEST_DIR = 'lib'
 // or packages that does their own build (e.g. studios)
 const IGNORED_PACKAGES = [
   'examples/storybook',
+  /dev\/.*/,
   /examples\/.*-studio/,
   'packages/@sanity/date-input',
   'packages/@sanity/eventsource',
