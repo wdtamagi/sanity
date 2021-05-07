@@ -95,8 +95,8 @@ export function BuildSwitcher() {
                     icon={ArrowDownIcon}
                     tone="primary"
                     mode="ghost"
-                    href="http://localhost:3333"
-                    text="Go to localhost"
+                    href={`http://localhost:3333${getPath()}`}
+                    text="Switch to localhost"
                   />
                 </Box>
               )}
@@ -169,7 +169,7 @@ export function BuildSwitcher() {
                                             tone="primary"
                                             mode="ghost"
                                             href={`https://${build.url}${getPath()}`}
-                                            title="Open built studio"
+                                            title="Switch to this deployed Studio"
                                           />
                                         )}
                                       </Inline>
