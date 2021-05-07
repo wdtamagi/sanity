@@ -88,7 +88,7 @@ export function BuildSwitcher() {
           portal
           content={
             <Box marginBottom={2} marginX={2}>
-              {isLocal && (
+              {!isLocal && (
                 <Box marginY={4}>
                   <Button
                     as="a"
