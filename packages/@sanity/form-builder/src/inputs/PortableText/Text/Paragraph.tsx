@@ -23,6 +23,8 @@ const Root = styled(Box)`
 `
 
 export function Paragraph(props: ParagraphProps) {
+  console.log('Paragraph', props)
+
   const {blockExtras, children} = props
 
   return (

@@ -29,6 +29,7 @@ import {EditObject} from './Objects/EditObject'
 import {Annotation} from './Text/Annotation'
 import {Blockquote} from './Text/Blockquote'
 import {Header} from './Text/Header'
+import {ListItem} from './Text/ListItem'
 import {Paragraph} from './Text/Paragraph'
 import {RenderBlockActions, RenderCustomMarkers, ObjectEditData} from './types'
 import {PortableTextSanityEditor} from './Editor'
@@ -235,6 +236,8 @@ export default function PortableTextInput(props: PortableTextInputProps) {
 
   const renderBlock = useCallback(
     (block, blockType, attributes, defaultRender) => {
+      console.log('render block', block, blockType, attributes)
+
       const blockMarkers = markers.filter(
         (marker) => isKeySegment(marker.path[0]) && marker.path[0]._key === block._key
       )
@@ -266,6 +269,13 @@ export default function PortableTextInput(props: PortableTextInputProps) {
               {renderedBlock}
             </Header>
           )
+        } else if (block.listItem) {
+          renderedBlock = (
+            <ListItem blockExtras={blockExtrasNode} level={attributes.level}>
+              {renderedBlock}
+            </ListItem>
+          )
+          // renderedBlock = <Text data-ui="List__item">{renderedBlock}</Text>
         } else {
           renderedBlock = <Paragraph blockExtras={blockExtrasNode}>{renderedBlock}</Paragraph>
         }

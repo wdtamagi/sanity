@@ -16,7 +16,7 @@ import {RenderBlockActions, RenderCustomMarkers} from '../types'
 // import styles from './BlockExtras.css'
 import {createBlockActionPatchFn} from '../utils/createBlockActionPatchFn'
 
-interface BlockExtrasProps {
+export interface BlockExtrasProps {
   block: PortableTextBlock
   showChangeIndicator: boolean
   markers: Marker[]

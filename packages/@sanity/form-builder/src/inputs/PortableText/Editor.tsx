@@ -25,7 +25,7 @@ import {RenderBlockActions, RenderCustomMarkers} from './types'
 import {Decorator} from './Text/Decorator'
 import {focusRingBorderStyle, focusRingStyle} from './Objects/styles'
 
-interface PortableTextSanityEditorProps {
+export interface PortableTextSanityEditorProps {
   hasFocus: boolean
   hotkeys: HotkeyOptions
   initialSelection?: EditorSelection
@@ -118,10 +118,33 @@ const EditableCard = styled(Card)<{$fullscreen: boolean}>((props: {$fullscreen: 
 
   return css`
     /* The editable div itself */
-    & > div {
+    & > .pt-editable {
       padding: ${$fullscreen ? '12px' : '0'};
       min-height: 0;
       flex: 1;
+    }
+
+    & > .pt-editable > .pt-list-item {
+      outline: 1px solid red;
+      width: auto;
+
+      & > .pt-list-item-number + :not(.pt-list-item-number) {
+        counter-reset: listItemNumber;
+      }
+
+      & > .pt-list-item-inner {
+        display: block;
+        position: relative;
+
+        &:before {
+          position: absolute;
+          font-size: inherit;
+          width: 1em;
+          left: -1em;
+          top: -7px;
+          color: red;
+        }
+      }
     }
   `
 })
