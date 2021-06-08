@@ -1,3 +1,6 @@
+/* eslint-disable import/no-unresolved */
+
+import {FitMode} from '@sanity/image-url/lib/types/types'
 import {SchemaType} from '@sanity/types'
 
 export type Id = string
@@ -22,3 +25,21 @@ export type PreviewConfig = {
   }
 }
 export type Type = SchemaType
+
+export type PreviewLayoutKey = 'default' | 'card' | 'media' | 'detail' | 'inline' | 'block'
+
+export interface PreviewProps {
+  progress?: number
+  title?: React.ReactNode | React.ComponentType<{layout: PreviewLayoutKey}>
+  subtitle?: React.ReactNode | React.ComponentType<{layout: PreviewLayoutKey}>
+  description?: React.ReactNode | React.ComponentType<{layout: PreviewLayoutKey}>
+  extendedPreview?: unknown
+  media?:
+    | React.ReactNode
+    | React.FC<{
+        dimensions: {width?: number; height?: number; fit: FitMode}
+        layout: PreviewLayoutKey
+      }>
+}
+
+export type PreviewComponent = React.ComponentType<PreviewProps>

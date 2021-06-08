@@ -1,4 +1,7 @@
-import React from 'react'
+/* eslint-disable import/no-unresolved */
+
+import {DocumentIcon} from '@sanity/icons'
+import React, {createElement} from 'react'
 import imageUrlBuilder from '@sanity/image-url'
 import assetUrlBuilder from 'part:@sanity/base/asset-url-builder'
 import PreviewComponentCard from 'part:@sanity/components/previews/card'
@@ -8,10 +11,11 @@ import PreviewComponentInline from 'part:@sanity/components/previews/inline'
 import PreviewComponentMedia from 'part:@sanity/components/previews/media'
 import PreviewComponentBlock from 'part:@sanity/components/previews/block'
 import PreviewComponentBlockImage from 'part:@sanity/components/previews/block-image'
-import fileIcon from 'part:@sanity/base/file-icon'
+import {FitMode} from '@sanity/image-url/lib/types/types'
 import {versionedClient} from '../../client/versionedClient'
+import {PreviewComponent, PreviewLayoutKey} from '../types'
 
-const previewComponentMap: {[key: string]: React.ComponentType<any>} = {
+const previewComponentMap: {[key: string]: PreviewComponent} = {
   default: PreviewComponentDefault,
   card: PreviewComponentCard,
   media: PreviewComponentMedia,
@@ -28,15 +32,15 @@ function extractUploadState(value) {
   return {_upload, value: rest}
 }
 
-type Props = {
+export interface SanityDefaultPreviewProps {
   _renderAsBlockImage: boolean
-  layout: keyof typeof previewComponentMap
+  layout: PreviewLayoutKey
   value: any
   icon: any
 }
 
-export default class SanityDefaultPreview extends React.PureComponent<Props> {
-  renderMedia = (options) => {
+export default class SanityDefaultPreview extends React.PureComponent<SanityDefaultPreviewProps> {
+  renderMedia = (options: {dimensions: {width?: number; height?: number; fit: FitMode}}) => {
     const imageBuilder = imageUrlBuilder(versionedClient)
 
     // This functions exists because the previews provides options
@@ -61,7 +65,7 @@ export default class SanityDefaultPreview extends React.PureComponent<Props> {
     )
   }
 
-  renderImageUrl = (options) => {
+  renderImageUrl = (options: {dimensions: {width?: number; height?: number; fit: FitMode}}) => {
     // Legacy support for imageUrl
     const {dimensions} = options
     const {value} = this.props
@@ -73,9 +77,9 @@ export default class SanityDefaultPreview extends React.PureComponent<Props> {
     return undefined
   }
 
-  renderIcon = (options) => {
+  renderIcon = () => {
     const {icon} = this.props
-    const Icon = icon || fileIcon
+    const Icon = icon || DocumentIcon
     return Icon && <Icon className="sanity-studio__preview-fallback-icon" />
   }
 
@@ -114,12 +118,12 @@ export default class SanityDefaultPreview extends React.PureComponent<Props> {
   render() {
     const {layout, _renderAsBlockImage, ...rest} = this.props
 
-    let PreviewComponent = previewComponentMap.hasOwnProperty(layout)
+    let previewComponent = previewComponentMap.hasOwnProperty(layout)
       ? previewComponentMap[layout]
       : previewComponentMap.default
 
     if (_renderAsBlockImage) {
-      PreviewComponent = PreviewComponentBlockImage
+      previewComponent = PreviewComponentBlockImage
     }
 
     const {_upload, value} = extractUploadState(this.props.value)
@@ -133,21 +137,22 @@ export default class SanityDefaultPreview extends React.PureComponent<Props> {
       : value
 
     if (!item) {
-      return <PreviewComponent {...rest} progress={_upload && _upload.progress} />
+      return createElement(previewComponent, {
+        ...rest,
+        progress: _upload && _upload.progress,
+      })
     }
 
     const media = this.resolveMedia()
 
-    return (
-      <PreviewComponent
-        {...rest}
-        title={item.title}
-        subtitle={item.subtitle}
-        description={item.description}
-        extendedPreview={item.extendedPreview}
-        media={media}
-        progress={_upload && _upload.progress}
-      />
-    )
+    return createElement(previewComponent, {
+      ...rest,
+      title: item.title,
+      subtitle: item.subtitle,
+      description: item.description,
+      extendedPreview: item.extendedPreview,
+      media,
+      progress: _upload && _upload.progress,
+    })
   }
 }
