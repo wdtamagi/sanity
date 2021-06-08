@@ -1,6 +1,10 @@
+/* eslint-disable import/no-unresolved */
+
+import {FitMode} from '@sanity/image-url/lib/types/types'
+
 export interface MediaDimensions {
   width?: number
   height?: number
-  fit?: 'clip' | 'crop' | 'fill' | 'fillmax' | 'max' | 'scale' | 'min'
+  fit: FitMode
   aspect?: number
 }

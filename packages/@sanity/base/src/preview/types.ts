@@ -28,18 +28,21 @@ export type Type = SchemaType
 
 export type PreviewLayoutKey = 'default' | 'card' | 'media' | 'detail' | 'inline' | 'block'
 
-export interface PreviewProps {
-  progress?: number
-  title?: React.ReactNode | React.ComponentType<{layout: PreviewLayoutKey}>
-  subtitle?: React.ReactNode | React.ComponentType<{layout: PreviewLayoutKey}>
-  description?: React.ReactNode | React.ComponentType<{layout: PreviewLayoutKey}>
+export interface PreviewProps<LayoutKey = PreviewLayoutKey> {
+  children?: React.ReactNode
+  description?: React.ReactNode | React.ComponentType<{layout: LayoutKey}>
   extendedPreview?: unknown
+  isPlaceholder?: boolean
   media?:
     | React.ReactNode
-    | React.FC<{
+    | React.ComponentType<{
         dimensions: {width?: number; height?: number; fit: FitMode}
-        layout: PreviewLayoutKey
+        layout: LayoutKey
       }>
+  progress?: number
+  status?: React.ReactNode | React.ComponentType<{layout: LayoutKey}>
+  subtitle?: React.ReactNode | React.ComponentType<{layout: LayoutKey}>
+  title?: React.ReactNode | React.ComponentType<{layout: LayoutKey}>
 }
 
 export type PreviewComponent = React.ComponentType<PreviewProps>
