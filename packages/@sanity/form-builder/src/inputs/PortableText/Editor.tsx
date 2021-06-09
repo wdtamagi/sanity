@@ -20,10 +20,10 @@ import React, {useMemo, useEffect} from 'react'
 import styled, {css} from 'styled-components'
 import PatchEvent from '../../PatchEvent'
 import {ExpandCollapseButton} from './components/expandCollapseButton'
-import {Toolbar} from './Toolbar'
+import {Toolbar} from './toolbar'
 import {RenderBlockActions, RenderCustomMarkers} from './types'
-import {Decorator} from './Text/Decorator'
-import {focusRingBorderStyle, focusRingStyle} from './Objects/styles'
+import {Decorator} from './Decorator'
+import {focusRingBorderStyle, focusRingStyle} from './objects/styles'
 
 export interface PortableTextSanityEditorProps {
   hasFocus: boolean
