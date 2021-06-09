@@ -53,8 +53,8 @@ export function BlockStyleMenu(props: BlockStyleMenuProps) {
   return (
     <MenuButton
       button={
-        <Button disabled={readOnly || disabled || _disabled} mode="bleed">
-          <Flex padding={2}>
+        <Button disabled={readOnly || disabled || _disabled} mode="bleed" padding={2}>
+          <Flex>
             <Box flex={1}>
               <Text>{currentTitle || <>(none)</>}</Text>
             </Box>
@@ -156,7 +156,7 @@ function BlockStyleMenuItem({
   const handleClick = useCallback(() => onChange(item), [item, onChange])
 
   return (
-    <MenuItem onClick={handleClick} selected={selected}>
+    <MenuItem onClick={handleClick} padding={0} selected={selected}>
       {blockNode}
     </MenuItem>
   )

@@ -124,7 +124,7 @@ const EditableCard = styled(Card)<{$fullscreen: boolean}>((props: {$fullscreen: 
       flex: 1;
     }
 
-    & > .pt-editable > .pt-list-item {
+    /* & > .pt-editable > .pt-list-item {
       outline: 1px solid red;
       width: auto;
 
@@ -145,7 +145,7 @@ const EditableCard = styled(Card)<{$fullscreen: boolean}>((props: {$fullscreen: 
           color: red;
         }
       }
-    }
+    } */
   `
 })
 

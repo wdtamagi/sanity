@@ -27,10 +27,7 @@ import {BlockObject} from './Objects/BlockObject'
 import {InlineObject} from './Objects/InlineObject'
 import {EditObject} from './Objects/EditObject'
 import {Annotation} from './Text/Annotation'
-import {Blockquote} from './Text/Blockquote'
-import {Header} from './Text/Header'
-import {ListItem} from './Text/ListItem'
-import {Paragraph} from './Text/Paragraph'
+import {TextBlock} from './Text/TextBlock'
 import {RenderBlockActions, RenderCustomMarkers, ObjectEditData} from './types'
 import {PortableTextSanityEditor} from './Editor'
 
@@ -236,8 +233,6 @@ export default function PortableTextInput(props: PortableTextInputProps) {
 
   const renderBlock = useCallback(
     (block, blockType, attributes, defaultRender) => {
-      console.log('render block', block, blockType, attributes)
-
       const blockMarkers = markers.filter(
         (marker) => isKeySegment(marker.path[0]) && marker.path[0]._key === block._key
       )
@@ -256,48 +251,35 @@ export default function PortableTextInput(props: PortableTextInputProps) {
         />
       )
 
-      let renderedBlock = defaultRender(block)
-
       // Text blocks
       if (block._type === blockTypeName) {
-        // Deal with block style
-        if (block.style === 'blockquote') {
-          renderedBlock = <Blockquote blockExtras={blockExtrasNode}>{renderedBlock}</Blockquote>
-        } else if (['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(block.style)) {
-          renderedBlock = (
-            <Header block={block} blockExtras={blockExtrasNode}>
-              {renderedBlock}
-            </Header>
-          )
-        } else if (block.listItem) {
-          renderedBlock = (
-            <ListItem blockExtras={blockExtrasNode} level={attributes.level}>
-              {renderedBlock}
-            </ListItem>
-          )
-          // renderedBlock = <Text data-ui="List__item">{renderedBlock}</Text>
-        } else {
-          renderedBlock = <Paragraph blockExtras={blockExtrasNode}>{renderedBlock}</Paragraph>
-        }
-      } else {
-        // Object blocks
-        renderedBlock = (
-          <BlockObject
-            attributes={attributes}
+        return (
+          <TextBlock
             blockExtras={blockExtrasNode}
-            editor={editor}
-            markers={blockMarkers}
-            // onChange={handleFormBuilderEditObjectChange}
-            focusPath={focusPath || EMPTY_ARRAY}
-            onFocus={onFocus}
-            readOnly={readOnly}
-            type={blockType}
-            value={block}
-          />
+            level={attributes.level}
+            listItem={block.listItem}
+            style={block.style}
+          >
+            {defaultRender(block)}
+          </TextBlock>
         )
       }
 
-      return renderedBlock
+      // Object blocks
+      return (
+        <BlockObject
+          attributes={attributes}
+          blockExtras={blockExtrasNode}
+          editor={editor}
+          markers={blockMarkers}
+          // onChange={handleFormBuilderEditObjectChange}
+          focusPath={focusPath || EMPTY_ARRAY}
+          onFocus={onFocus}
+          readOnly={readOnly}
+          type={blockType}
+          value={block}
+        />
+      )
     },
     [
       blockTypeName,

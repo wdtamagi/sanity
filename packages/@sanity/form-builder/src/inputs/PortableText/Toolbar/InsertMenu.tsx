@@ -1,5 +1,5 @@
-import React from 'react'
-import {Button, Menu, MenuButton, MenuItem} from '@sanity/ui'
+import React, {useMemo} from 'react'
+import {Button, Menu, MenuButton, MenuItem, PopoverProps} from '@sanity/ui'
 import {AddIcon} from '@sanity/icons'
 import {BlockItem} from './types'
 
@@ -11,6 +11,15 @@ interface InsertMenuProps {
 
 export function InsertMenu(props: InsertMenuProps) {
   const {disabled, items, readOnly} = props
+
+  const popoverProps: PopoverProps = useMemo(
+    () => ({
+      portal: true,
+      placement: 'bottom',
+      preventOverflow: true,
+    }),
+    []
+  )
 
   return (
     <MenuButton
@@ -44,8 +53,7 @@ export function InsertMenu(props: InsertMenuProps) {
           })}
         </Menu>
       }
-      placement="bottom"
-      portal
+      popover={popoverProps}
     />
   )
 }

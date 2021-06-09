@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState, useMemo} from 'react'
 import {EllipsisHorizontalIcon} from '@sanity/icons'
-import {Box, Button, Flex, Inline, Menu, MenuButton, MenuItem} from '@sanity/ui'
+import {Box, Button, Flex, Inline, Menu, MenuButton, MenuItem, PopoverProps} from '@sanity/ui'
 import styled from 'styled-components'
 
 interface Action {
@@ -92,6 +92,15 @@ export function OverflowMenu(props: OverflowMenuProps) {
     }
   }, [lastHidden])
 
+  const popoverProps: PopoverProps = useMemo(
+    () => ({
+      portal: true,
+      placement: 'bottom',
+      preventOverflow: true,
+    }),
+    []
+  )
+
   return (
     <Flex>
       <Box flex={1}>
@@ -165,8 +174,7 @@ export function OverflowMenu(props: OverflowMenuProps) {
               })}
             </Menu>
           }
-          placement="bottom"
-          portal
+          popover={popoverProps}
         />
       </Box>
     </Flex>
