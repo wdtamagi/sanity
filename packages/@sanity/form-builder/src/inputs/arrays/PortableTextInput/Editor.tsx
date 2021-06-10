@@ -13,7 +13,7 @@ import {
   PortableTextEditor,
   usePortableTextEditor,
 } from '@sanity/portable-text-editor'
-import {Marker, Path} from '@sanity/types'
+import {Path} from '@sanity/types'
 import {Box, Card, Container, Flex, Theme, useLayer} from '@sanity/ui'
 import {ScrollContainer} from '@sanity/base/components'
 import React, {useMemo, useEffect} from 'react'
@@ -30,7 +30,7 @@ export interface PortableTextSanityEditorProps {
   hotkeys: HotkeyOptions
   initialSelection?: EditorSelection
   isFullscreen: boolean
-  markers: Array<Marker>
+  // markers: Marker[]
   onBlur: () => void
   onCopy?: OnCopyFn
   onFocus: (path?: Path) => void
@@ -57,6 +57,7 @@ const Root = styled(Card)(({theme}: {theme: Theme}) => {
     &:not([hidden]) {
       display: flex;
     }
+
     position: relative;
     flex-direction: column;
     border-radius: ${radius[1]}px;
@@ -144,7 +145,6 @@ export function PortableTextSanityEditor(props: PortableTextSanityEditorProps) {
     hotkeys: hotkeysProp,
     initialSelection,
     isFullscreen,
-    // markers,
     onCopy,
     onFocus,
     onPaste,
@@ -152,7 +152,6 @@ export function PortableTextSanityEditor(props: PortableTextSanityEditorProps) {
     readOnly,
     renderAnnotation,
     renderBlock,
-    // renderBlockActions,
     renderChild,
     setPortalElement,
     setScrollContainerElement,
@@ -162,38 +161,6 @@ export function PortableTextSanityEditor(props: PortableTextSanityEditorProps) {
   const editor = usePortableTextEditor()
   const ptFeatures = useMemo(() => PortableTextEditor.getPortableTextFeatures(editor), [editor])
   const {isTopLayer} = useLayer()
-
-  // TODO: Enable when we agree upon the hotkey for opening edit object interface when block object is focused
-  // const handleOpenObjectHotkey = (
-  //   event: React.BaseSyntheticEvent,
-  //   ptEditor: PortableTextEditor
-  // ) => {
-  //   const selection = PortableTextEditor.getSelection(ptEditor)
-  //   if (selection) {
-  //     event.preventDefault()
-  //     event.stopPropagation()
-  //     const {focus} = selection
-  //     const activeAnnotations = PortableTextEditor.activeAnnotations(ptEditor)
-  //     const focusBlock = PortableTextEditor.focusBlock(ptEditor)
-  //     const focusChild = PortableTextEditor.focusChild(ptEditor)
-  //     if (activeAnnotations.length > 0) {
-  //       onFocus([
-  //         ...focus.path.slice(0, 1),
-  //         'markDefs',
-  //         {_key: activeAnnotations[0]._key},
-  //         FOCUS_TERMINATOR,
-  //       ])
-  //       return
-  //     }
-  //     if (focusChild && PortableTextEditor.isVoid(ptEditor, focusChild)) {
-  //       onFocus([...focus.path, FOCUS_TERMINATOR])
-  //       return
-  //     }
-  //     if (focusBlock && PortableTextEditor.isVoid(ptEditor, focusBlock)) {
-  //       onFocus([...focus.path.slice(0, 1), FOCUS_TERMINATOR])
-  //     }
-  //   }
-  // }
 
   const customFromProps: HotkeyOptions = useMemo(
     () => ({
@@ -250,25 +217,6 @@ export function PortableTextSanityEditor(props: PortableTextSanityEditorProps) {
     [marksFromProps, customFromProps]
   )
 
-  // const hasMarkers = useMemo(() => markers.length > 0, [markers])
-  // const scClassNames = useMemo(
-  //   () =>
-  //     [
-  //       styles.scrollContainer,
-  //       ...(renderBlockActions || hasMarkers ? [styles.hasBlockExtras] : [styles.hasNoBlockExtras]),
-  //     ].join(' '),
-  //   [hasMarkers, renderBlockActions]
-  // )
-  // const editorWrapperClassNames = useMemo(() => [styles.editorWrapper].join(' '), [])
-  // const editorClassNames = useMemo(
-  //   () =>
-  //     [
-  //       styles.editor,
-  //       ...(renderBlockActions || hasMarkers ? [styles.hasBlockExtras] : [styles.hasNoBlockExtras]),
-  //     ].join(' '),
-  //   [hasMarkers, renderBlockActions]
-  // )
-
   useEffect(() => {
     if (!isTopLayer || !isFullscreen) return undefined
 
@@ -293,17 +241,9 @@ export function PortableTextSanityEditor(props: PortableTextSanityEditorProps) {
         data-focused={hasFocus ? '' : undefined}
         data-fullscreen={isFullscreen ? '' : undefined}
         data-ui="PTEditor"
-        // className={styles.editorBox}
       >
-        <Flex
-          // className={styles.header}
-          style={{borderBottom: '1px solid var(--card-border-color)'}}
-        >
-          <Box
-            data-ui="Editor__toolbarBox"
-            flex={1}
-            // className={styles.toolbarContainer}
-          >
+        <Flex style={{borderBottom: '1px solid var(--card-border-color)'}}>
+          <Box data-ui="Editor__toolbarBox" flex={1}>
             <Toolbar
               isFullscreen={isFullscreen}
               hotkeys={hotkeys}
@@ -314,7 +254,6 @@ export function PortableTextSanityEditor(props: PortableTextSanityEditorProps) {
           </Box>
           <Box
             data-ui="Editor__expandCollapseButtonBox"
-            // className={styles.fullscreenButtonContainer}
             padding={isFullscreen ? 2 : 1}
             style={{borderLeft: '1px solid var(--card-border-color)'}}
           >
@@ -326,11 +265,9 @@ export function PortableTextSanityEditor(props: PortableTextSanityEditorProps) {
         </Flex>
 
         <Card
-          // className={editorWrapperClassNames}
           data-ui="Editor__editableBg"
           flex={1}
           height={isFullscreen ? 'fill' : undefined}
-          // padding={isFullscreen ? 2 : undefined}
           tone="transparent"
           sizing="border"
           style={{
@@ -340,7 +277,6 @@ export function PortableTextSanityEditor(props: PortableTextSanityEditorProps) {
           }}
         >
           <ScrollContainer
-            // className={scClassNames}
             data-ui="Editor__scrollContainer"
             ref={setScrollContainerElement}
             style={{
@@ -388,8 +324,6 @@ export function PortableTextSanityEditor(props: PortableTextSanityEditorProps) {
       </Root>
     ),
     [
-      // editorClassNames,
-      // editorWrapperClassNames,
       hasFocus,
       hotkeys,
       initialSelection,
@@ -402,7 +336,6 @@ export function PortableTextSanityEditor(props: PortableTextSanityEditorProps) {
       renderAnnotation,
       renderBlock,
       renderChild,
-      // scClassNames,
       setPortalElement,
       setScrollContainerElement,
       value,

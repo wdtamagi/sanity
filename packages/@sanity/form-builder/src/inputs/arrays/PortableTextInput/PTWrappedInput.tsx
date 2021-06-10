@@ -30,7 +30,7 @@ import {TextBlock} from './textBlock/TextBlock'
 import {RenderBlockActions, RenderCustomMarkers, ObjectEditData} from './types'
 import {PortableTextSanityEditor} from './Editor'
 
-interface PortableTextInputProps {
+export interface InputProps {
   focusPath: Path
   hasFocus: boolean
   hotkeys: HotkeyOptions
@@ -58,7 +58,7 @@ const Root = styled.div`
   outline-offset: -4px;
 `
 
-export default function PortableTextInput(props: PortableTextInputProps) {
+export function PTWrappedInput(props: InputProps) {
   const {
     focusPath,
     hasFocus,
@@ -377,7 +377,7 @@ export default function PortableTextInput(props: PortableTextInputProps) {
         initialSelection={initialSelection}
         isFullscreen={isFullscreen}
         key={`editor-${activationId}`}
-        markers={markers}
+        // markers={markers}
         onBlur={onBlur}
         onFocus={onFocus}
         onFormBuilderChange={onChange}
@@ -402,7 +402,7 @@ export default function PortableTextInput(props: PortableTextInputProps) {
       initialSelection,
       isFullscreen,
       activationId,
-      markers,
+      // markers,
       onBlur,
       onFocus,
       onChange,
@@ -451,17 +451,12 @@ export default function PortableTextInput(props: PortableTextInputProps) {
   ])
 
   return (
-    <Root
-      // className={classNames(styles.root, hasFocus && styles.focus, readOnly && styles.readOnly)}
-      data-focused={hasFocus ? '' : undefined}
-      data-read-only={readOnly ? '' : undefined}
-    >
+    <Root data-focused={hasFocus ? '' : undefined} data-read-only={readOnly ? '' : undefined}>
       {isFullscreen && (
         <Portal key={`portal-${activationId}`}>
           <PortalProvider element={portalElement}>
             <BoundaryElementProvider element={scrollContainerElement}>
               <Layer
-                // className={classNames(styles.fullscreenPortal, readOnly && styles.readOnly)}
                 style={{position: 'absolute', top: 0, left: 0, right: 0, bottom: 0}}
                 zOffset={zindex.portal}
               >
@@ -478,17 +473,9 @@ export default function PortableTextInput(props: PortableTextInputProps) {
         <>
           <ActivateOnFocus
             inputId={activationId}
-            html={
-              <Heading
-                as="h3"
-                // className={styles.activeOnFocusHeading}
-              >
-                Click to activate
-              </Heading>
-            }
+            html={<Heading as="h3">Click to activate</Heading>}
             isActive={isActive}
             onActivate={handleActivate}
-            // overlayClassName={styles.activateOnFocusOverlay}
           >
             <ChangeIndicatorWithProvidedFullPath
               compareDeep

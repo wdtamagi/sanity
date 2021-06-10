@@ -3,7 +3,7 @@ import {Box, Button, Card, Code, Grid, Stack, Text} from '@sanity/ui'
 import React, {useCallback} from 'react'
 import {Alert} from '../../../components/Alert'
 
-interface InvalidValueProps {
+export interface InvalidValueProps {
   onChange: (mutation: any) => void
   onIgnore: () => void
   resolution: InvalidValueResolution

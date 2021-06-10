@@ -3,7 +3,7 @@ import {Button, Menu, MenuButton, MenuItem, PopoverProps} from '@sanity/ui'
 import {AddIcon} from '@sanity/icons'
 import {BlockItem} from './types'
 
-interface InsertMenuProps {
+export interface InsertMenuProps {
   disabled: boolean
   items: BlockItem[]
   readOnly: boolean

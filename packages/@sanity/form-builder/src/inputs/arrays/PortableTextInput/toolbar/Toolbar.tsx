@@ -37,7 +37,6 @@ export function Toolbar(props: ToolbarProps) {
   const editor = usePortableTextEditor()
   const selection = usePortableTextEditorSelection()
   const disabled = !selection
-  // <<<<<<< HEAD
   const toast = useToast()
 
   const resolveInitialValue = useCallback(

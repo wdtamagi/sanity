@@ -21,7 +21,7 @@ import PatchEvent from '../../../PatchEvent'
 import withPatchSubscriber from '../../../utils/withPatchSubscriber'
 import type {Patch} from '../../../patch/types'
 import {RenderBlockActions, RenderCustomMarkers} from './types'
-import Input from './Input'
+import {PTWrappedInput} from './PTWrappedInput'
 import {InvalidValue as RespondToInvalidContent} from './InvalidValue'
 
 export type PatchWithOrigin = Patch & {
@@ -29,15 +29,15 @@ export type PatchWithOrigin = Patch & {
   timestamp: Date
 }
 
-type PatchSubscribe = (subscribeFn: PatchSubscriber) => () => void
-type PatchSubscriber = ({
+export type PatchSubscribe = (subscribeFn: PatchSubscriber) => () => void
+export type PatchSubscriber = ({
   patches,
 }: {
   patches: PatchWithOrigin[]
   snapshot: PortableTextBlock[] | undefined
 }) => void
 
-interface PortableTextInputProps {
+export interface PortableTextInputProps {
   focusPath: Path
   hotkeys: HotkeyOptions
   level: number
@@ -79,7 +79,7 @@ const JumpToEditorBox = styled(Stack)`
   }
 `
 
-const PortableTextInputWithRef = React.forwardRef(function PortableTextInput(
+const PTInputWithRef = React.forwardRef(function PortableTextInput(
   props: Omit<PortableTextInputProps, 'level'>,
   ref: React.RefObject<PortableTextEditor>
 ) {
@@ -228,7 +228,7 @@ const PortableTextInputWithRef = React.forwardRef(function PortableTextInput(
             </JumpToEditorBox>
           )}
 
-          <Input
+          <PTWrappedInput
             focusPath={focusPath}
             hasFocus={hasFocus}
             hotkeys={hotkeys}
@@ -287,7 +287,7 @@ const PortableTextInputWithRef = React.forwardRef(function PortableTextInput(
   )
 })
 
-export const PortableTextInput = withPatchSubscriber(
+export const PTInput = withPatchSubscriber(
   class PortableTextInputWithFocusAndBlur extends React.Component<
     PortableTextInputProps & {children: React.ReactNode}
   > {
@@ -316,7 +316,7 @@ export const PortableTextInput = withPatchSubscriber(
           __unstable_presence={presence}
           __unstable_changeIndicator={false}
         >
-          <PortableTextInputWithRef {...this.props} ref={this.editorRef} />
+          <PTInputWithRef {...this.props} ref={this.editorRef} />
         </FormField>
       )
     }

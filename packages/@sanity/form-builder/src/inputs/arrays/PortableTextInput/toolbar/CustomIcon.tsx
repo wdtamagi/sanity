@@ -1,7 +1,7 @@
 import React, {useMemo} from 'react'
 import styled from 'styled-components'
 
-interface CustomIconProps {
+export interface CustomIconProps {
   icon: string
   active: boolean
 }
@@ -15,7 +15,6 @@ const Root = styled.span`
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  /* transform: scale(0.7); */
 `
 
 export function CustomIcon(props: CustomIconProps) {

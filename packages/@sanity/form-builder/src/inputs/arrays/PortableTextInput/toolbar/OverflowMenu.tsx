@@ -3,14 +3,14 @@ import {EllipsisHorizontalIcon} from '@sanity/icons'
 import {Box, Button, Flex, Inline, Menu, MenuButton, MenuItem, PopoverProps} from '@sanity/ui'
 import styled from 'styled-components'
 
-interface Action {
+export interface OverflowMenuAction {
   firstInGroup?: boolean
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any
 }
 
-interface OverflowMenuProps {
-  actions: Action[]
+export interface OverflowMenuProps {
+  actions: OverflowMenuAction[]
   disabled?: boolean
 }
 

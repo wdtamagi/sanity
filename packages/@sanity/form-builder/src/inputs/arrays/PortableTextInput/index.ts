@@ -1,1 +1,1 @@
-export {PortableTextInput} from './PortableTextInput'
+export {PTInput as PortableTextInput} from './PTInput'

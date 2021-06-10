@@ -2,9 +2,9 @@ import {normalizeBlock} from '@sanity/block-tools'
 import {PortableTextBlock} from '@sanity/portable-text-editor'
 import PatchEvent, {insert, unset, set} from '../../../../PatchEvent'
 
-type UnsetFunction = () => void
-type SetFunction = (args0: PortableTextBlock) => void
-type InsertFunction = (args0: PortableTextBlock | PortableTextBlock[]) => void
+export type UnsetFunction = () => void
+export type SetFunction = (arg0: PortableTextBlock) => void
+export type InsertFunction = (arg0: PortableTextBlock | PortableTextBlock[]) => void
 
 export function createBlockActionPatchFn(
   type: string,
