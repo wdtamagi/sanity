@@ -17,13 +17,12 @@ import {
 import {Subject} from 'rxjs'
 import {Box, Button, Stack, useToast} from '@sanity/ui'
 import styled from 'styled-components'
-import PatchEvent from '../../PatchEvent'
-import withPatchSubscriber from '../../utils/withPatchSubscriber'
-import type {Patch} from '../../patch/types'
+import PatchEvent from '../../../PatchEvent'
+import withPatchSubscriber from '../../../utils/withPatchSubscriber'
+import type {Patch} from '../../../patch/types'
 import {RenderBlockActions, RenderCustomMarkers} from './types'
 import Input from './Input'
 import {InvalidValue as RespondToInvalidContent} from './InvalidValue'
-// import styles from './PortableTextInput.css'
 
 export type PatchWithOrigin = Patch & {
   origin: 'local' | 'remote' | 'internal'
@@ -138,8 +137,6 @@ const PortableTextInputWithRef = React.forwardRef(function PortableTextInput(
 
   const handleEditorChange = useCallback(
     (change: EditorChange): void => {
-      console.log('change', change)
-
       switch (change.type) {
         case 'mutation':
           // Don't wait for the result

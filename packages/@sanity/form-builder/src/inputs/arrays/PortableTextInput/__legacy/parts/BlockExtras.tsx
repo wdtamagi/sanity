@@ -1,4 +1,3 @@
-// import classNames from 'classnames'
 import {ChangeIndicatorWithProvidedFullPath} from '@sanity/base/lib/change-indicators'
 import {isKeySegment, Marker, Path} from '@sanity/types'
 import {
@@ -10,11 +9,10 @@ import {
 import {Flex} from '@sanity/ui'
 import React, {createElement, useMemo} from 'react'
 import styled from 'styled-components'
-import {Markers} from '../../../legacyParts'
-import PatchEvent from '../../../PatchEvent'
-import {RenderBlockActions, RenderCustomMarkers} from '../types'
-// import styles from './BlockExtras.css'
-import {createBlockActionPatchFn} from '../utils/createBlockActionPatchFn'
+import {Markers} from '../../../../../legacyParts'
+import PatchEvent from '../../../../../PatchEvent'
+import {RenderBlockActions, RenderCustomMarkers} from '../../types'
+import {createBlockActionPatchFn} from '../../utils/createBlockActionPatchFn'
 
 export interface BlockExtrasProps {
   block: PortableTextBlock
@@ -46,17 +44,13 @@ function getValidationMarkers(markers: Marker[]) {
 }
 
 const Root = styled.div`
-  /* outline: 1px solid red; */
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  /* width: 100%; */
-  /* min-height: 10px; */
   pointer-events: none;
   user-select: none;
-  /* overflow: hidden; */
 
   & > div {
     height: 100%;
@@ -68,14 +62,6 @@ const Root = styled.div`
 `
 
 const Content = styled.div`
-  /* margin-left: calc(100% - var(--block-extras-width)); */
-  /* border-left: 2px solid transparent; */
-  /* padding: var(--small-padding) 0 var(--small-padding) calc(var(--small-padding) - 2px); */
-  /* box-sizing: border-box; */
-  /* display: flex; */
-  /* flex-direction: column; */
-  /* justify-content: center; */
-
   height: 100%;
 
   &:hover:before {

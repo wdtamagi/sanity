@@ -2,8 +2,8 @@ import {FormFieldValidationStatus} from '@sanity/base/components'
 import {Path, Marker, isValidationMarker} from '@sanity/types'
 import {Flex} from '@sanity/ui'
 import React, {useCallback, useMemo} from 'react'
-import {CustomMarkers} from '../../../legacyParts'
-import {RenderCustomMarkers} from '../types'
+import {CustomMarkers} from '../../../../../legacyParts'
+import {RenderCustomMarkers} from '../../types'
 
 interface MarkersProps {
   markers: Marker[]

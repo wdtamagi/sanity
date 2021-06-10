@@ -3,8 +3,8 @@ import {PortableTextBlock, Type, PortableTextChild} from '@sanity/portable-text-
 import {Path, Marker, SchemaType} from '@sanity/types'
 import {Box, Dialog} from '@sanity/ui'
 import React, {useCallback} from 'react'
-import {PatchEvent} from '../../../../PatchEvent'
-import {FormBuilderInput} from '../../../../FormBuilderInput'
+import {PatchEvent} from '../../../../../PatchEvent'
+import {FormBuilderInput} from '../../../../../FormBuilderInput'
 
 interface DefaultObjectEditingProps {
   focusPath: Path

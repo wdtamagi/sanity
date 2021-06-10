@@ -1,6 +1,6 @@
 import {MenuItem} from '@sanity/ui'
 import React from 'react'
-import {useRouter} from '../../../legacyParts'
+import {useRouter} from '../../../../legacyParts'
 
 export interface IntentMenuItemProps extends Omit<React.ComponentProps<typeof MenuItem>, 'href'> {
   intent: string

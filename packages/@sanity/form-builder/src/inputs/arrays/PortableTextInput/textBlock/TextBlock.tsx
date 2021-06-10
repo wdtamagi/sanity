@@ -28,6 +28,7 @@ const Root = styled(Box)<{
     const {$level, $listItem, $size, $style, theme} = props
     const {space} = theme.sanity
     const font = theme.sanity.fonts[$style]
+    const fontSize = font.sizes[$size || 2]
     const indent = typeof $level === 'number' ? space[4] * $level : undefined
     const bulletMarker =
       $listItem === 'bullet' && typeof $level === 'number'
@@ -43,22 +44,25 @@ const Root = styled(Box)<{
       & > [data-ui='TextBlock__text'] {
         position: relative;
         text-transform: none;
-        white-space: wrap;
+        white-space: pre-wrap;
         overflow-wrap: anywhere;
-        outline: 1px solid red;
+        /* outline: 1px solid red; */
 
         &:before {
+          content: var(--text-block-marker);
           position: absolute;
           display: flex;
-          justify-content: flex-start;
+          justify-content: flex-end;
           align-items: center;
-          left: -1.5em;
-          font-size: calc(${font.sizes[$size].fontSize}px / 2);
+          left: -3em;
+          font-size: calc(${fontSize.fontSize}px / 2);
           line-height: 1;
-          content: var(--text-block-marker-bullet);
-          width: 1em;
-          top: 0;
-          bottom: 0;
+          width: 1.5em;
+          height: ${fontSize.lineHeight}px;
+          top: ${0 - fontSize.ascenderHeight}px;
+          padding-top: 0.1em;
+          text-align: right;
+          /* outline: 1px solid gray; */
         }
       }
     `
@@ -160,6 +164,9 @@ export function TextBlock(props: TextBlockProps) {
       $listItem={listItem}
       $size={$size}
       $style={$style}
+      data-level={level}
+      data-list-item={listItem}
+      data-style={$style}
       data-ui="TextBlock"
       paddingX={3}
       paddingY={listItem ? 2 : 3}

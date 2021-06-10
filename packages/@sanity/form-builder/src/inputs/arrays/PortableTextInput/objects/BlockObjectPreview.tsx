@@ -1,10 +1,9 @@
 import {PortableTextBlock, Type} from '@sanity/portable-text-editor'
 import {EditIcon, LinkIcon, TrashIcon, EyeOpenIcon, SelectIcon} from '@sanity/icons'
-// import {Path} from '@sanity/types'
 import {Box, Button, MenuButton, Menu, MenuItem, ThemeColorToneKey} from '@sanity/ui'
 import React, {useMemo} from 'react'
 import styled from 'styled-components'
-import Preview from '../../../Preview'
+import Preview from '../../../../Preview'
 import {IntentMenuItem} from './IntentMenuItem'
 
 interface MenuItemProps {

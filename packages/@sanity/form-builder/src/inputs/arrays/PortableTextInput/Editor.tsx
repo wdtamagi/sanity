@@ -18,11 +18,11 @@ import {Box, Card, Container, Flex, Theme, useLayer} from '@sanity/ui'
 import {ScrollContainer} from '@sanity/base/components'
 import React, {useMemo, useEffect} from 'react'
 import styled, {css} from 'styled-components'
-import PatchEvent from '../../PatchEvent'
+import PatchEvent from '../../../PatchEvent'
 import {ExpandCollapseButton} from './components/expandCollapseButton'
 import {Toolbar} from './toolbar'
 import {RenderBlockActions, RenderCustomMarkers} from './types'
-import {Decorator} from './Decorator'
+import {Decorator} from './decorator/Decorator'
 import {focusRingBorderStyle, focusRingStyle} from './objects/styles'
 
 export interface PortableTextSanityEditorProps {
@@ -122,30 +122,15 @@ const EditableCard = styled(Card)<{$fullscreen: boolean}>((props: {$fullscreen: 
       padding: ${$fullscreen ? '12px' : '0'};
       min-height: 0;
       flex: 1;
+
+      & > :not(.pt-list-item) + .pt-list-item {
+        margin-top: 4px;
+      }
+
+      & > .pt-list-item + :not(.pt-list-item) {
+        margin-top: 4px;
+      }
     }
-
-    /* & > .pt-editable > .pt-list-item {
-      outline: 1px solid red;
-      width: auto;
-
-      & > .pt-list-item-number + :not(.pt-list-item-number) {
-        counter-reset: listItemNumber;
-      }
-
-      & > .pt-list-item-inner {
-        display: block;
-        position: relative;
-
-        &:before {
-          position: absolute;
-          font-size: inherit;
-          width: 1em;
-          left: -1em;
-          top: -7px;
-          color: red;
-        }
-      }
-    } */
   `
 })
 

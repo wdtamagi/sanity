@@ -9,8 +9,8 @@ import {
 import {Path, Marker, SchemaType} from '@sanity/types'
 import {Placement} from '@sanity/ui'
 import React, {useEffect, useCallback, useMemo, useState} from 'react'
-import {FormBuilderInput} from '../../../../FormBuilderInput'
-import {PatchEvent} from '../../../../PatchEvent'
+import {FormBuilderInput} from '../../../../../FormBuilderInput'
+import {PatchEvent} from '../../../../../PatchEvent'
 import {PopoverDialog} from '../../components/PopoverDialog'
 
 interface Props {

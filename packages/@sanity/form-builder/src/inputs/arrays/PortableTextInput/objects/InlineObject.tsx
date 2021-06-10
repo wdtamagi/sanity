@@ -1,14 +1,11 @@
 import React, {useCallback, useMemo} from 'react'
 import {isEqual} from 'lodash'
-// import classNames from 'classnames'
 import {PortableTextChild, Type, RenderAttributes} from '@sanity/portable-text-editor'
 import {Path} from '@sanity/types'
 import {FOCUS_TERMINATOR} from '@sanity/util/paths'
 import styled from 'styled-components'
-import Preview from '../../../Preview'
-import {PatchEvent} from '../../../PatchEvent'
-
-// import styles from './InlineObject.css'
+import Preview from '../../../../Preview'
+import {PatchEvent} from '../../../../PatchEvent'
 
 interface InlineObjectProps {
   attributes: RenderAttributes
