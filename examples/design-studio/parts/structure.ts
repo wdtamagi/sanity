@@ -6,7 +6,7 @@ import {JSONPreviewDocumentView} from './components/jsonPreview'
 const STRUCTURE_CUSTOM_TYPES = ['settings']
 
 // Add `JSON` tab to the `author` document form
-export const getDefaultDocumentNode = ({schemaType}: {schemaType: any}) => {
+export const getDefaultDocumentNode = ({schemaType}: {schemaType: string}) => {
   // Conditionally return a different configuration based on the schema type
   if (schemaType === 'author') {
     return S.document().views([
@@ -29,11 +29,19 @@ export const getDefaultDocumentNode = ({schemaType}: {schemaType: any}) => {
 const settingsListItem = S.listItem()
   .title('Settings')
   .icon(CogIcon)
-  .child(S.editor().id('settings').schemaType('settings').documentId('settings'))
+  .child(
+    S.editor()
+      .id('settings')
+      .schemaType('settings')
+      .documentId('settings')
+      .child(
+        S.document().child(S.document().child(S.document().child(S.document().child(S.document()))))
+      )
+  )
 
 // The default root list items (except custom ones)
 const defaultListItems = S.documentTypeListItems().filter(
-  (listItem: any) => !STRUCTURE_CUSTOM_TYPES.includes(listItem.getId())
+  (listItem) => !STRUCTURE_CUSTOM_TYPES.includes(listItem.getId() || '')
 )
 
 const listExample = S.listItem()

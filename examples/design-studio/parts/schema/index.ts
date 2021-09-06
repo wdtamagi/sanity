@@ -1,6 +1,9 @@
 import schemaTypes from 'all:part:@sanity/base/schema-type'
 import createSchema from 'part:@sanity/base/schema-creator'
 
+// types
+import {pseudoReferenceType} from './types/pseudoReference'
+
 // document types
 // NOTE: keep this alphabetized
 import allInputs from './allInputs'
@@ -15,8 +18,12 @@ import settings from './settings'
 
 export default createSchema({
   name: 'design-studio',
+
+  // NOTE: keep this alphabetized
   types: schemaTypes.concat([
-    // NOTE: keep this alphabetized
+    // types:
+    pseudoReferenceType,
+    // documents types:
     allInputs,
     arrayInArray,
     author,

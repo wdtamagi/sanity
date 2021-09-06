@@ -12,5 +12,10 @@ export default {
       title: 'Title',
       validation: (rule: Rule) => rule.required().min(10).max(80),
     },
+    {
+      type: 'pseudoReference',
+      name: 'author',
+      title: 'Author',
+    },
   ],
 }

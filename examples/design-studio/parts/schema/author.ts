@@ -14,6 +14,11 @@ export default {
       validation: (rule: Rule) => rule.required().min(10).max(80),
     },
     {
+      type: 'pseudoReference',
+      name: 'collaborator',
+      title: 'Collaborator',
+    },
+    {
       type: 'string',
       name: 'role',
       title: 'Role',
