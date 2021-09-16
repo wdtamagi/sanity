@@ -15,8 +15,12 @@
 .documentAndChangesContainer {
   flex: 1;
   min-height: 0;
-  display: flex;
-  position: relative;
+
+  & > div {
+    position: relative;
+    height: 100%;
+    display: flex;
+  }
 }
 
 .footerContainer {

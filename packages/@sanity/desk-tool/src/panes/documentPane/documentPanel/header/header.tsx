@@ -5,13 +5,13 @@ import {MenuItem, MenuItemGroup} from '@sanity/base/__legacy/@sanity/components'
 import {Chunk} from '@sanity/field/diff'
 import {CloseIcon, SplitVerticalIcon} from '@sanity/icons'
 import {Path} from '@sanity/types'
-import {Box, Button, Layer} from '@sanity/ui'
+import {BoundaryElementProvider, Box, Button, Layer} from '@sanity/ui'
 import classNames from 'classnames'
 import {negate} from 'lodash'
 import LanguageFilter from 'part:@sanity/desk-tool/language-select-component?'
 import React, {useCallback, useMemo, useState} from 'react'
+import {LegacyLayerProvider} from '@sanity/base/components'
 import {useDeskToolFeatures} from '../../../../features'
-
 import {DocumentView} from '../../types'
 import {TimelineMenu} from '../../timeline'
 import {DocumentPanelContextMenu} from './contextMenu'
@@ -39,6 +39,7 @@ export interface DocumentPanelHeaderProps {
   rev: Chunk | null
   rootElement: HTMLDivElement | null
   schemaType: any
+  timelinePopoverBoundaryElement: HTMLDivElement | null
   title: React.ReactNode
   views: DocumentView[]
 }
@@ -66,6 +67,7 @@ export function DocumentPanelHeader(props: DocumentPanelHeaderProps) {
     rootElement,
     schemaType,
     onSetFormInputFocus,
+    timelinePopoverBoundaryElement,
     title,
     views,
   } = props
@@ -172,11 +174,15 @@ export function DocumentPanelHeader(props: DocumentPanelHeaderProps) {
   const versionMenu = useMemo(
     () =>
       showVersionMenu && (
-        <Box marginX={1} style={{marginLeft: 'auto'}}>
-          <TimelineMenu chunk={rev} mode="rev" />
+        <Box margin={1} style={{marginLeft: 'auto'}}>
+          <BoundaryElementProvider element={timelinePopoverBoundaryElement}>
+            <LegacyLayerProvider zOffset="paneHeader">
+              <TimelineMenu chunk={rev} mode="rev" />
+            </LegacyLayerProvider>
+          </BoundaryElementProvider>
         </Box>
       ),
-    [rev, showVersionMenu]
+    [rev, showVersionMenu, timelinePopoverBoundaryElement]
   )
 
   return (

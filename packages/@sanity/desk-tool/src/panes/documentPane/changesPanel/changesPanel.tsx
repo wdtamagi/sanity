@@ -12,9 +12,9 @@ import {
   ObjectDiff,
   ObjectSchemaType,
 } from '@sanity/field/diff'
+import {Box, AvatarStack, BoundaryElementProvider, Button, Flex, Card} from '@sanity/ui'
 import CloseIcon from 'part:@sanity/base/close-icon'
-import {UserAvatar, ScrollContainer} from '@sanity/base/components'
-import {AvatarStack, BoundaryElementProvider, Button, Flex, Card} from '@sanity/ui'
+import {LegacyLayerProvider, UserAvatar, ScrollContainer} from '@sanity/base/components'
 import React, {useRef} from 'react'
 import {useDocumentHistory} from '../documentHistory'
 import {TimelineMenu} from '../timeline'
@@ -28,6 +28,7 @@ interface ChangesPanelProps {
   loading: boolean
   schemaType: ObjectSchemaType
   since: Chunk | null
+  timelinePopoverBoundaryElement: HTMLDivElement | null
 }
 
 export function ChangesPanel({
@@ -35,6 +36,7 @@ export function ChangesPanel({
   loading,
   since,
   schemaType,
+  timelinePopoverBoundaryElement,
 }: ChangesPanelProps): React.ReactElement | null {
   const scrollRef = useRef<HTMLElement | null>(null)
   const {close: closeHistory, historyController} = useDocumentHistory()
@@ -75,9 +77,13 @@ export function ChangesPanel({
           </div>
 
           <div className={styles.versionSelectContainer}>
-            <div className={styles.changesSinceSelectContainer}>
-              <TimelineMenu mode="since" chunk={since} />
-            </div>
+            <Box className={styles.changesSinceSelectContainer} margin={1}>
+              <BoundaryElementProvider element={timelinePopoverBoundaryElement}>
+                <LegacyLayerProvider zOffset="paneHeader">
+                  <TimelineMenu mode="since" chunk={since} />
+                </LegacyLayerProvider>
+              </BoundaryElementProvider>
+            </Box>
 
             {changeAnnotations.length > 0 && (
               <DiffTooltip

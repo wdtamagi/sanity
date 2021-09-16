@@ -1,14 +1,10 @@
-// @todo: remove the following line when part imports has been removed from this file
-///<reference types="@sanity/types/parts" />
-
 import React, {useCallback, useEffect, useRef, useState} from 'react'
 import {Chunk} from '@sanity/field/diff'
-import {Box, Menu, Stack, Text} from '@sanity/ui'
-import Spinner from 'part:@sanity/components/loading/spinner'
+import {Box, Menu, Spinner, Stack, Text} from '@sanity/ui'
+import styled from 'styled-components'
 import {Timeline as TimelineModel} from '../documentHistory/history/timeline'
 import {TimelineItem} from './timelineItem'
 import {TimelineItemState} from './types'
-import {Root} from './timeline.styled'
 
 interface TimelineProps {
   timeline: TimelineModel
@@ -22,6 +18,10 @@ interface TimelineProps {
   /** The final chunk of the selection. */
   bottomSelection: Chunk
 }
+
+export const Root = styled(Box)`
+  --timeline-border-color: var(--card-border-color);
+`
 
 // Must be a positive number
 const LOAD_MORE_OFFSET = 20
@@ -59,7 +59,7 @@ export const Timeline = ({
   useEffect(checkIfLoadIsNeeded, [checkIfLoadIsNeeded])
 
   return (
-    <Root ref={rootRef as any} onScroll={checkIfLoadIsNeeded} data-ui="timeline">
+    <Root data-ui="Timeline" onScroll={checkIfLoadIsNeeded} ref={rootRef as any}>
       {timeline.chunkCount === 0 && (
         <Stack padding={4} space={3} style={{maxWidth: 200}}>
           <Text weight="bold">No document history</Text>
@@ -69,7 +69,7 @@ export const Timeline = ({
           </Text>
         </Stack>
       )}
-      <Menu ref={listRef} padding={2} space={0}>
+      <Menu ref={listRef} padding={1} space={0}>
         {timeline.mapChunks((chunk) => {
           const isSelectionTop = topSelection === chunk
           const isSelectionBottom = bottomSelection === chunk
@@ -106,7 +106,7 @@ export const Timeline = ({
 
       {!timeline.reachedEarliestEntry && (
         <Box padding={4} ref={setLoadingElement}>
-          <Spinner center />
+          <Spinner muted />
         </Box>
       )}
     </Root>

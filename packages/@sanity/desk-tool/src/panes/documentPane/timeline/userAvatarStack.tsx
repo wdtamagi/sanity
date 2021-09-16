@@ -1,6 +1,3 @@
-// @todo: remove the following line when part imports has been removed from this file
-///<reference types="@sanity/types/parts" />
-
 import {UserAvatar} from '@sanity/base/components'
 import React from 'react'
 import {AvatarStack} from '@sanity/ui'

@@ -1,9 +1,10 @@
 import {useTimeAgo} from '@sanity/base/hooks'
 import {Chunk} from '@sanity/field/diff'
 import {SelectIcon} from '@sanity/icons'
-import {useClickOutside, Button, Box, Popover, Card} from '@sanity/ui'
+import {useClickOutside, Button, Popover} from '@sanity/ui'
 import {upperFirst} from 'lodash'
-import React, {useCallback, useState, useMemo} from 'react'
+import React, {useCallback, useState} from 'react'
+import styled from 'styled-components'
 import {useDocumentHistory} from '../documentHistory'
 import {sinceTimelineProps, revTimelineProps, formatTimelineEventLabel} from './helpers'
 import {Timeline} from './timeline'
@@ -13,11 +14,17 @@ interface TimelineMenuProps {
   mode: 'rev' | 'since'
 }
 
+const Root = styled(Popover)`
+  & > div {
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+`
+
 export function TimelineMenu({chunk, mode}: TimelineMenuProps) {
   const [open, setOpen] = useState(false)
   const [buttonRef, setButtonRef] = useState(null)
   const [menuContent, setMenuContent] = useState(null)
-
   const {historyController, setRange, setTimelineMode, timeline} = useDocumentHistory()
 
   const handleOpen = () => {
@@ -64,7 +71,7 @@ export function TimelineMenu({chunk, mode}: TimelineMenuProps) {
   )
 
   const content = open && (
-    <Card ref={setMenuContent as any} radius={3}>
+    <div ref={setMenuContent as any}>
       {mode === 'rev' ? (
         <Timeline
           timeline={timeline}
@@ -80,7 +87,7 @@ export function TimelineMenu({chunk, mode}: TimelineMenuProps) {
           {...sinceTimelineProps(historyController.sinceTime!, historyController.realRevChunk)}
         />
       )}
-    </Card>
+    </div>
   )
 
   const timeAgo = useTimeAgo(chunk?.endTimestamp || '', {agoSuffix: true})
@@ -97,26 +104,18 @@ export function TimelineMenu({chunk, mode}: TimelineMenuProps) {
   const buttonLabel = mode === 'rev' ? revLabel : sinceLabel
 
   return (
-    <Box margin={1} data-ui="versionMenu">
-      <Popover
-        content={content}
-        referenceElement={buttonRef}
-        open={open}
-        boundaryElement={menuContent}
-        portal
-      >
-        <Button
-          ref={setButtonRef as any}
-          text={open ? openLabel : buttonLabel}
-          tone={open ? 'primary' : 'default'}
-          selected={open}
-          mode="bleed"
-          fontSize={1}
-          padding={2}
-          iconRight={SelectIcon}
-          onClick={open ? handleClose : handleOpen}
-        />
-      </Popover>
-    </Box>
+    <Root constrainSize content={content} referenceElement={buttonRef} open={open} portal>
+      <Button
+        ref={setButtonRef as any}
+        text={open ? openLabel : buttonLabel}
+        tone={open ? 'primary' : 'default'}
+        selected={open}
+        mode="bleed"
+        fontSize={1}
+        padding={2}
+        iconRight={SelectIcon}
+        onClick={open ? handleClose : handleOpen}
+      />
+    </Root>
   )
 }
