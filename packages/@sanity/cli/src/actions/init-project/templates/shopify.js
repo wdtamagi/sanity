@@ -1,7 +1,6 @@
 export const dependencies = {
   'lodash.get': '^4.4.2',
   pluralize: '^8.0.0',
-  'sanity-plugin-color-picker': '^1.0.3',
   '@sanity/color-input': '^2.21.7',
   slug: '^5.1.0',
   'sanity-plugin-media': '^1.4.0',
@@ -16,4 +15,34 @@ export const generateSanityManifest = (base) => ({
     'dashboard-widget-document-list',
     'sanity-shopify-intro',
   ]),
+  parts: [
+    {
+      name: 'part:@sanity/base/schema',
+      path: './schemas/schema',
+    },
+    {
+      name: 'part:@sanity/desk-tool/structure',
+      path: './deskStructure.js',
+    },
+    {
+      implements: 'part:@sanity/form-builder/input/image/asset-sources',
+      path: './parts/assetSources.js',
+    },
+    {
+      implements: 'part:@sanity/form-builder/input/file/asset-sources',
+      path: './parts/assetSources.js',
+    },
+    {
+      implements: 'part:@sanity/dashboard/config',
+      path: './parts/dashboardConfig.js',
+    },
+    {
+      name: 'part:@sanity/base/new-document-structure',
+      path: './parts/newDocumentStructure.js',
+    },
+    {
+      implements: 'part:@sanity/base/document-actions/resolver',
+      path: './parts/resolveDocumentActions.js',
+    },
+  ],
 })
