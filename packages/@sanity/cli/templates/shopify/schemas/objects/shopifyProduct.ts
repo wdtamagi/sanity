@@ -32,20 +32,6 @@ export default {
     }
   ],
   fields: [
-    // Enabled (on sales channel)
-    {
-      fieldset: 'status',
-      name: 'isEnabled',
-      title: 'Enabled on sales channel?',
-      type: 'boolean'
-    },
-    // Deleted
-    {
-      fieldset: 'status',
-      name: 'isDeleted',
-      title: 'Deleted from Shopify?',
-      type: 'boolean'
-    },
     // Created at
     {
       fieldset: 'status',
@@ -71,6 +57,13 @@ export default {
         list: ['active', 'archived', 'draft']
       },
       validation: Rule => Rule.required()
+    },
+    // Deleted
+    {
+      fieldset: 'status',
+      name: 'isDeleted',
+      title: 'Deleted from Shopify?',
+      type: 'boolean'
     },
     // Title
     {
@@ -113,29 +106,6 @@ export default {
     {
       name: 'priceRange',
       title: 'Price range',
-      type: 'object',
-      options: {
-        columns: 2
-      },
-      fields: [
-        {
-          name: 'minVariantPrice',
-          title: 'Min variant price',
-          type: 'number',
-          validation: Rule => Rule.required()
-        },
-        {
-          name: 'maxVariantPrice',
-          title: 'Max variant price',
-          type: 'number',
-          validation: Rule => Rule.required()
-        }
-      ]
-    },
-    // Compare at price range
-    {
-      name: 'compareAtPriceRange',
-      title: 'Compare at price range',
       type: 'object',
       options: {
         columns: 2

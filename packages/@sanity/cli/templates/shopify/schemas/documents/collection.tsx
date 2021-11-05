@@ -22,6 +22,13 @@ export default {
       options: { source: 'title' },
       validation: Rule => Rule.required()
     },
+    // Description
+    {
+      name: 'description',
+      title: 'Description',
+      type: 'text',
+      rows: 3
+    },
     // Image
     {
       name: 'image',
@@ -60,7 +67,7 @@ export default {
       const { image, productCount, title } = selection
       return {
         media: image,
-        subtitle: pluralize('product', productCount, true),
+        subtitle: productCount ? pluralize('product', productCount, true) : 'No products',
         title
       }
     }
