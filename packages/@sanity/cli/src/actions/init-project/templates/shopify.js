@@ -1,11 +1,10 @@
 export const dependencies = {
-  '@sanity/color-input': '^2.21.7',
   '@sanity/dashboard': '^2.21.7',
   'lodash.get': '^4.4.2',
   pluralize: '^8.0.0',
   'react-time-ago': '7.1.3',
   slug: '^5.1.0',
-  'sanity-plugin-dashboard-widget-shopify': '^0.1.2',
+  'sanity-plugin-dashboard-widget-shopify': '^0.1.5',
   'sanity-plugin-media': '^1.4.3',
 }
 
@@ -14,7 +13,6 @@ export const generateSanityManifest = (base) => ({
   plugins: [
     '@sanity/dashboard',
     ...base.plugins,
-    '@sanity/color-input',
     'dashboard-widget-shopify',
     'media',
   ],

@@ -1,5 +1,5 @@
 import { CloseIcon, ImageIcon, LinkRemovedIcon } from '@sanity/icons'
-import React, { forwardRef } from 'react'
+import React, { forwardRef, useState } from 'react'
 
 type Props = {
   isActive: boolean
@@ -10,6 +10,11 @@ type Props = {
 
 const ProductMediaPreview = forwardRef<HTMLDivElement, Props>((props, ref) => {
   const { isActive, isDeleted, type, url } = props
+
+  const [imageVisible, setImageVisible] = useState(true)
+
+  // Hide image on error / 404
+  const handleImageError = () => setImageVisible(false)
 
   return (
     <div
@@ -23,12 +28,14 @@ const ProductMediaPreview = forwardRef<HTMLDivElement, Props>((props, ref) => {
         width: '5em'
       }}
     >
-      {url ? (
+      {imageVisible && url ? (
         <img
+          onError={handleImageError}
           src={`${url}&width=400`}
           style={{
             height: '100%',
             left: 0,
+            objectFit: 'contain',
             position: 'absolute',
             top: 0,
             width: '100%'

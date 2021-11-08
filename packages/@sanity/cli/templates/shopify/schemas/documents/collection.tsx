@@ -34,6 +34,7 @@ export default {
       name: 'image',
       title: 'Image',
       type: 'image',
+      options: { hotspot: true },
       validation: Rule => Rule.required()
     },
     // Products
@@ -44,8 +45,8 @@ export default {
       of: [
         {
           title: 'Product',
-          type: 'reference',
-          to: [{ type: 'product' }]
+          name: 'product',
+          type: 'productWithVariant'
         }
       ],
       validation: Rule => Rule.unique()
