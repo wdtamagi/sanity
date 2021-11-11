@@ -4,7 +4,7 @@ export const dependencies = {
   pluralize: '^8.0.0',
   'react-time-ago': '7.1.3',
   slug: '^5.1.0',
-  'sanity-plugin-dashboard-widget-shopify': '^0.1.5',
+  'sanity-plugin-dashboard-widget-shopify': '^0.1.7',
   'sanity-plugin-media': '^1.4.3',
 }
 
