@@ -136,6 +136,10 @@ module.exports = async function deployApiActions(args, context) {
     spinner.fail()
     throw err
   }
+
+  // The graphql action reads the schema that can potentially pull in timers and other active
+  // handles that prevents the node process to exit gracefully.
+  process.exit(0)
 }
 
 function getCurrentSchemaProps({client, dataset, tag}) {
