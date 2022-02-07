@@ -12,9 +12,11 @@ import sanityClient from 'part:@sanity/base/client'
 import {User, CurrentUser} from '@sanity/types'
 import {debugRolesParam$} from '../debugParams'
 import {getDebugRolesByNames} from '../grants/debug'
+import {broadcastAuthStateChanged, deleteToken} from '../authToken'
 import {UserStore, CurrentUserSnapshot} from './types'
 
 const client = sanityClient.withConfig({apiVersion: '2021-06-07'})
+const projectId = client.config().projectId
 
 const [logout$, logout] = observableCallback()
 const [refresh$, refresh] = observableCallback()
@@ -58,11 +60,44 @@ function fetchCurrentUser(): Observable<CurrentUser | null> {
   )
 }
 
+const isClientConfiguredWithToken = () => !!client.config().token
+
 const currentUser: Observable<CurrentUser | null> = merge(
-  fetchCurrentUser(), // initial fetch
-  refresh$.pipe(switchMap(() => fetchCurrentUser())), // re-fetch as response to request to refresh current user
+  fetchCurrentUser().pipe(
+    tap((usr) => {
+      if (isClientConfiguredWithToken()) {
+        if (!usr) {
+          deleteToken(projectId)
+        }
+        broadcastAuthStateChanged()
+      }
+    }),
+    catchError((err) => {
+      if (err.statusCode === 401 && isClientConfiguredWithToken()) {
+        deleteToken(projectId)
+        return of(null)
+      }
+      throw err
+    })
+  ), // initial fetch
+  refresh$.pipe(
+    switchMap(() =>
+      fetchCurrentUser().pipe(
+        tap((usr) => {
+          if (!usr) {
+            deleteToken(projectId)
+          }
+          broadcastAuthStateChanged()
+        })
+      )
+    )
+  ), // re-fetch as response to request to refresh current user
   logout$.pipe(
     mergeMap(() => authenticationFetcher.logout()),
+    tap(() => {
+      deleteToken(projectId)
+      broadcastAuthStateChanged()
+    }),
     mapTo(null)
   )
 ).pipe(shareReplay({refCount: true, bufferSize: 1}))
