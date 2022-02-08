@@ -6,10 +6,10 @@ export const MAX_DEFAULT_HEIGHT = 30
 export const RatioBox = styled(Card)`
   position: relative;
   width: 100%;
-  resize: vertical;
+  /* resize: vertical; */
   overflow: hidden;
   min-height: 3.75rem;
-  max-height: 40rem;
+  max-height: 20rem;
 
   & > div[data-container] {
     top: 0;
