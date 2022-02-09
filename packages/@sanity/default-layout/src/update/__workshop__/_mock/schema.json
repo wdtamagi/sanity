@@ -1,0 +1,798 @@
+{
+  "_createdAt": "2022-02-08T14:00:59Z",
+  "_id": "drafts.5cee21af-1f89-471c-8ebd-676bc88c6698",
+  "_rev": "pnmf5c-bzr-ft5-5oc-njqm27ssc",
+  "_type": "apiChange",
+  "_updatedAt": "2022-02-10T16:40:51.763Z",
+  "changeItems": [
+    {
+      "_key": "2f4c1d2e77d1",
+      "_type": "changeItem",
+      "changeType": "feature",
+      "description": [
+        {
+          "_key": "5531a025fc19",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "6e1b57ac4f940",
+              "_type": "span",
+              "marks": [],
+              "text": "The Portable Text editor now supports a new "
+            },
+            {
+              "_key": "6e1b57ac4f941",
+              "_type": "span",
+              "marks": [
+                "code"
+              ],
+              "text": "modal"
+            },
+            {
+              "_key": "6e1b57ac4f942",
+              "_type": "span",
+              "marks": [],
+              "text": " option with a "
+            },
+            {
+              "_key": "6e1b57ac4f943",
+              "_type": "span",
+              "marks": [
+                "code"
+              ],
+              "text": "type"
+            },
+            {
+              "_key": "6e1b57ac4f944",
+              "_type": "span",
+              "marks": [],
+              "text": " and "
+            },
+            {
+              "_key": "6e1b57ac4f945",
+              "_type": "span",
+              "marks": [
+                "code"
+              ],
+              "text": "width"
+            },
+            {
+              "_key": "6e1b57ac4f946",
+              "_type": "span",
+              "marks": [],
+              "text": " property. This means you can customize the size of annotation popovers (a much requested feature)."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "5b894c00b5bf",
+          "_type": "code",
+          "code": "  type: 'block',\n  marks: {\n    annotations: [\n      {\n        type: 'object',\n        name: 'link',\n        title: 'Link',\n        options: {\n          // 👇👇👇\n          modal: {\n            type: 'popover',\n            width: 'medium' // the default is \"small\"\n          },\n          // 👆👆👆\n        },\n      },\n    ],\n  },\n  // ...",
+          "language": "typescript"
+        }
+      ],
+      "title": "New modal options in Portable Text editor"
+    },
+    {
+      "_key": "36c62bc2d92fc8dd1ac6807a2343afdf",
+      "_type": "changeItem",
+      "changeType": "feature",
+      "description": [
+        {
+          "_key": "ef8839744c48",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "a243b56ae7aa0",
+              "_type": "span",
+              "marks": [],
+              "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "bd3786321d00",
+          "_type": "image",
+          "asset": {
+            "_ref": "image-0169085d09424d82c24d2c6ba3b4c71fe8e093e4-1280x665-png",
+            "_type": "reference"
+          }
+        }
+      ],
+      "title": "Improved change indicator highlighting in Portable Text Editor"
+    },
+    {
+      "_key": "6eabf14c24ab",
+      "_type": "changeItem",
+      "changeType": "bugfix",
+      "description": [
+        {
+          "_key": "a947fd501297",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "3503a7c24427",
+              "_type": "span",
+              "marks": [],
+              "text": "Lorem ipsum "
+            },
+            {
+              "_key": "d51197785151",
+              "_type": "span",
+              "marks": [
+                "strong"
+              ],
+              "text": "dolor sit amet"
+            },
+            {
+              "_key": "eb534d841545",
+              "_type": "span",
+              "marks": [],
+              "text": ", consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation "
+            },
+            {
+              "_key": "96889fe9c567",
+              "_type": "span",
+              "marks": [
+                "em"
+              ],
+              "text": "ullamco laboris nisi"
+            },
+            {
+              "_key": "57cfae8a2ec0",
+              "_type": "span",
+              "marks": [],
+              "text": " ut aliquip ex ea commodo consequat. "
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "38c2d6f9771f",
+          "_type": "code",
+          "code": "console.log('Hello world')",
+          "language": "typescript"
+        },
+        {
+          "_key": "e5d8588b91fc",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "c210bf887c5e",
+              "_type": "span",
+              "marks": [],
+              "text": "Removes a false positive validation error with some nested image and file fields ("
+            },
+            {
+              "_key": "10ae217a4b5e",
+              "_type": "span",
+              "marks": [
+                "fd4732450a16"
+              ],
+              "text": "#3119"
+            },
+            {
+              "_key": "1e71dc774542",
+              "_type": "span",
+              "marks": [],
+              "text": ")"
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [
+            {
+              "_key": "fd4732450a16",
+              "_type": "link",
+              "href": "https://github.com/sanity-io/sanity/pull/3119"
+            }
+          ],
+          "style": "normal"
+        },
+        {
+          "_key": "9b762208b979",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "de83761b23c9",
+              "_type": "span",
+              "marks": [],
+              "text": "Fixes a bug where adding marks to a Portable Text block would remove some existing marks ("
+            },
+            {
+              "_key": "569a30b2c954",
+              "_type": "span",
+              "marks": [
+                "7c0cf7824a4b"
+              ],
+              "text": "#3124"
+            },
+            {
+              "_key": "673d2cc16573",
+              "_type": "span",
+              "marks": [],
+              "text": ")"
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [
+            {
+              "_key": "7c0cf7824a4b",
+              "_type": "link",
+              "href": "https://github.com/sanity-io/sanity/pull/3124"
+            }
+          ],
+          "style": "normal"
+        },
+        {
+          "_key": "244e624df51e",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "1c0d317f31ac",
+              "_type": "span",
+              "marks": [],
+              "text": "Fixes a bug where list items in Portable Text without a level would cause an error ("
+            },
+            {
+              "_key": "e9ba1dbc6625",
+              "_type": "span",
+              "marks": [
+                "3bf66a3d7050"
+              ],
+              "text": "#3129"
+            },
+            {
+              "_key": "2bd8325b2d94",
+              "_type": "span",
+              "marks": [],
+              "text": ")"
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [
+            {
+              "_key": "3bf66a3d7050",
+              "_type": "link",
+              "href": "https://github.com/sanity-io/sanity/pull/3129"
+            }
+          ],
+          "style": "normal"
+        },
+        {
+          "_key": "70113172fe3a",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "a1f1bb6cf5cb",
+              "_type": "span",
+              "marks": [],
+              "text": "Fixes a bug where read-only arrays showed an empty actions menu ("
+            },
+            {
+              "_key": "5bad80b6b064",
+              "_type": "span",
+              "marks": [
+                "a788a34324ef"
+              ],
+              "text": "#3130"
+            },
+            {
+              "_key": "9983c70a4f5c",
+              "_type": "span",
+              "marks": [],
+              "text": ")"
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [
+            {
+              "_key": "a788a34324ef",
+              "_type": "link",
+              "href": "https://github.com/sanity-io/sanity/pull/3130"
+            }
+          ],
+          "style": "normal"
+        },
+        {
+          "_key": "8ef74d9b0835",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e581544e555d",
+              "_type": "span",
+              "marks": [],
+              "text": "Improves empty read-only state for arrays ("
+            },
+            {
+              "_key": "c52122686e2e",
+              "_type": "span",
+              "marks": [
+                "a32f2371fd95"
+              ],
+              "text": "#3131"
+            },
+            {
+              "_key": "55ac2553bf6c",
+              "_type": "span",
+              "marks": [],
+              "text": ")"
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [
+            {
+              "_key": "a32f2371fd95",
+              "_type": "link",
+              "href": "https://github.com/sanity-io/sanity/pull/3131"
+            }
+          ],
+          "style": "normal"
+        },
+        {
+          "_key": "02a50356280f",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "2525279a8de7",
+              "_type": "span",
+              "marks": [],
+              "text": "Adds validation warnings on incorrectly implemented asset sources ("
+            },
+            {
+              "_key": "d958ae9417a7",
+              "_type": "span",
+              "marks": [
+                "509fcbf74530"
+              ],
+              "text": "#3135"
+            },
+            {
+              "_key": "9cbbcf9b7277",
+              "_type": "span",
+              "marks": [],
+              "text": ")"
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [
+            {
+              "_key": "509fcbf74530",
+              "_type": "link",
+              "href": "https://github.com/sanity-io/sanity/pull/3135"
+            }
+          ],
+          "style": "normal"
+        },
+        {
+          "_key": "8d8030d59384",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "89bbb1acf9f5",
+              "_type": "span",
+              "marks": [],
+              "text": "Bullet"
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "69cefc8a2b2f",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "c69c49bc6ff3",
+              "_type": "span",
+              "marks": [],
+              "text": "Bullet"
+            }
+          ],
+          "level": 2,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "818f32f86f19",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "904c71dc0fec",
+              "_type": "span",
+              "marks": [],
+              "text": "Bullet"
+            }
+          ],
+          "level": 3,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "83e7c1639cf5",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "6bd47a8e9fde",
+              "_type": "span",
+              "marks": [],
+              "text": "Bullet"
+            }
+          ],
+          "level": 4,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "c8f14d3d7a73",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "84ad1b9cf257",
+              "_type": "span",
+              "marks": [],
+              "text": "Bullet"
+            }
+          ],
+          "level": 5,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "772065c3ad2d",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "9a527e90b546",
+              "_type": "span",
+              "marks": [],
+              "text": "Bullet"
+            }
+          ],
+          "level": 6,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "cd1eea3962d5",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "fa7950f29b67",
+              "_type": "span",
+              "marks": [],
+              "text": "Bullet"
+            }
+          ],
+          "level": 5,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "fea66136505c",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "b882489647f8",
+              "_type": "span",
+              "marks": [],
+              "text": "Bullet"
+            }
+          ],
+          "level": 4,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "6b3f7df249f7",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "34746c2a7e77",
+              "_type": "span",
+              "marks": [],
+              "text": "Bullet"
+            }
+          ],
+          "level": 3,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "076ca6fc8a85",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "0f4413e16007",
+              "_type": "span",
+              "marks": [],
+              "text": "Bullet"
+            }
+          ],
+          "level": 2,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "506a5c300940",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e27956bb0bdd",
+              "_type": "span",
+              "marks": [],
+              "text": "Bullet"
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "6b3f6bea4834",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "b983c3c5d4bb",
+              "_type": "span",
+              "marks": [],
+              "text": "Number"
+            }
+          ],
+          "level": 1,
+          "listItem": "number",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "959612d7f362",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "905682da7958",
+              "_type": "span",
+              "marks": [],
+              "text": "Number"
+            }
+          ],
+          "level": 2,
+          "listItem": "number",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "dc9932bc2aea",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "28c7abef22b6",
+              "_type": "span",
+              "marks": [],
+              "text": "Number"
+            }
+          ],
+          "level": 3,
+          "listItem": "number",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "12b2dd0fd4b4",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "000977e906d7",
+              "_type": "span",
+              "marks": [],
+              "text": "Number"
+            }
+          ],
+          "level": 4,
+          "listItem": "number",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "4832b91e7985",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "8b54f157097c",
+              "_type": "span",
+              "marks": [],
+              "text": "Number"
+            }
+          ],
+          "level": 5,
+          "listItem": "number",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "c91b472b81c4",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "623756a1339b",
+              "_type": "span",
+              "marks": [],
+              "text": "Number"
+            }
+          ],
+          "level": 6,
+          "listItem": "number",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "c47a57646e8b",
+          "_type": "block",
+          "level": 6,
+          "listItem": "number",
+          "markDefs": [],
+          "style": "normal",
+          "children": [
+            {
+              "_key": "4609e642cefc",
+              "_type": "span",
+              "marks": [],
+              "text": "efef"
+            }
+          ]
+        },
+        {
+          "_key": "3963d6c9dbf8",
+          "_type": "block",
+          "level": 6,
+          "listItem": "number",
+          "markDefs": [],
+          "style": "normal",
+          "children": [
+            {
+              "_key": "d1306dbb86c0",
+              "_type": "span",
+              "marks": [],
+              "text": "efef"
+            }
+          ]
+        },
+        {
+          "_key": "7a07fdf1b9de",
+          "_type": "block",
+          "level": 6,
+          "listItem": "number",
+          "markDefs": [],
+          "style": "normal",
+          "children": [
+            {
+              "_key": "5696dee7d2e3",
+              "_type": "span",
+              "marks": [],
+              "text": "efef"
+            }
+          ]
+        },
+        {
+          "_key": "c93cd8fe72d4",
+          "_type": "block",
+          "level": 6,
+          "listItem": "number",
+          "markDefs": [],
+          "style": "normal",
+          "children": [
+            {
+              "_key": "9594ffd609b8",
+              "_type": "span",
+              "marks": [],
+              "text": "efef"
+            }
+          ]
+        },
+        {
+          "_key": "8823bfa0ef59",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "7b371a0662ea",
+              "_type": "span",
+              "marks": [],
+              "text": "Number"
+            }
+          ],
+          "level": 5,
+          "listItem": "number",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "a962bdc4b9a7",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "b55c2ef2dccb",
+              "_type": "span",
+              "marks": [],
+              "text": "Number"
+            }
+          ],
+          "level": 4,
+          "listItem": "number",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "abe607a70742",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "196c8fdf0a2b",
+              "_type": "span",
+              "marks": [],
+              "text": "Number"
+            }
+          ],
+          "level": 3,
+          "listItem": "number",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "2ec606d80ad6",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "ddd2df75067d",
+              "_type": "span",
+              "marks": [],
+              "text": "Number"
+            }
+          ],
+          "level": 2,
+          "listItem": "number",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "ff45e867688a",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "6def815c909b",
+              "_type": "span",
+              "marks": [],
+              "text": "Number"
+            }
+          ],
+          "level": 1,
+          "listItem": "number",
+          "markDefs": [],
+          "style": "normal"
+        }
+      ],
+      "title": "Bugfix"
+    }
+  ],
+  "hidden": true
+}
