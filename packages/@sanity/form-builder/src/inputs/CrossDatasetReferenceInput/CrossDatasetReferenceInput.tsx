@@ -29,11 +29,10 @@ import {
 import {ChangeIndicatorForFieldPath, FormField} from '@sanity/base/components'
 import {getPublishedId} from '@sanity/base/_internal'
 import {useObservableCallback} from 'react-rx'
-import PatchEvent, {set, setIfMissing, unset} from '../../PatchEvent'
+import PatchEvent, {set, unset} from '../../PatchEvent'
 import {EMPTY_ARRAY} from '../../utils/empty'
 import {useDidUpdate} from '../../hooks/useDidUpdate'
 
-import {isNonNullable} from '../../utils/isNonNullable'
 import {AlertStrip} from '../../AlertStrip'
 import {BaseInputProps, SearchState} from './types'
 import {OptionPreview} from './OptionPreview'
@@ -60,6 +59,8 @@ function nonNullable<T>(v: T): v is NonNullable<T> {
 }
 
 type $TODO = any
+
+const DISABLE_WRITE_REF = true
 
 const REF_PATH = ['_ref']
 export const CrossDatasetReferenceInput = forwardRef(function CrossDatasetReferenceInput(
@@ -104,9 +105,13 @@ export const CrossDatasetReferenceInput = forwardRef(function CrossDatasetRefere
           set({
             _type: type.name,
             _ref: getPublishedId(id),
-            _projectId: type.projectId,
-            _dataset: type.dataset,
-            _weak: type.weak,
+            ...(DISABLE_WRITE_REF
+              ? {_weak: true}
+              : {
+                  _projectId: type.projectId,
+                  _dataset: type.dataset,
+                  _weak: type.weak,
+                }),
             // persist _key between mutations if the value is in an array
             _key: value?._key,
           })
