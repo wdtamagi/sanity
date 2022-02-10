@@ -15,7 +15,7 @@ export default {
         "Note: The current token for the dataset does not have read access to documents in the 'restricted.**' path",
       type: 'crossDatasetReference',
       dataset: 'playground',
-      projectId: 'exx11uqh',
+      projectId: 'ppsg7ml5',
       tokenId: 'restricted',
       studioUrl: ({id, type}) => {
         return type
@@ -42,7 +42,7 @@ export default {
       name: 'bookOrAuthorInPlayground',
       type: 'crossDatasetReference',
       dataset: 'playground',
-      projectId: 'exx11uqh',
+      projectId: 'ppsg7ml5',
       tokenId: 'readToken',
       studioUrl: ({id, type}) => {
         return type
